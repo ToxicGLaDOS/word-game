@@ -23,6 +23,7 @@ public class LevelPresenter : MonoBehaviour
         levelView.SetLettersText(lettersText);
         levelView.SetRegexText(regexText);
         levelView.SetWordsRemaining(level.GetRemainingWords().Count);
+        levelView.InitalizeWords(level.GetRemainingWords());
 
     }
 

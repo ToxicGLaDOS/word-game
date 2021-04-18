@@ -5,9 +5,9 @@ using UnityEngine.UI;
 
 public class LevelView : MonoBehaviour
 {
+    public WordPanelHandler wordPanelHandler;
     public Text lettersTextbox;
     public Text regexTextbox;
-    public Text foundCorrectWords;
     public Text foundBonusWords;
     public Text messageText;
     public Text wordsRemainingCounter;
@@ -17,6 +17,7 @@ public class LevelView : MonoBehaviour
     void Start()
     {
         levelPresenter = FindObjectOfType<LevelPresenter>(); 
+        wordPanelHandler = FindObjectOfType<WordPanelHandler>();
     }
 
     public void SetWordsRemaining(int amount){
@@ -42,8 +43,12 @@ public class LevelView : MonoBehaviour
         return inputField.text;
     }
 
+    public void InitalizeWords(List<string> words){
+        wordPanelHandler.AddWords(words);
+    }
+
     public void AddCorrectWord(string word){
-        foundCorrectWords.text += word + "\n";
+        wordPanelHandler.RevealWord(word);
     }
 
     public void AddBonusWord(string word){

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Level 
+public class Level
 {
     public List<string> correctWords = new List<string>();
     public List<string> foundWords = new List<string>();
@@ -29,10 +29,17 @@ public class Level
     public void InitalizeRandom(){
         foundWords = new List<string>();
         correctWords = new List<string>();
-        string word = dictionary.RandomWord(7);
-        string regex = "^" + word[0] + ".*" + word[word.Length-1] + "$";
-        constraint = new Constraint(regex, word);
-        correctWords = dictionary.GetMatchingConstraint(constraint);
+        int attempts = 0;
+        while(true){
+            attempts++;
+            string word = dictionary.RandomWord(7);
+            string regex = "^" + word[0] + ".*" + word[word.Length-1] + "$";
+            constraint = new Constraint(regex, word);
+            correctWords = dictionary.GetMatchingConstraint(constraint);
+            if(correctWords.Count > 8 && correctWords.Count < 20){
+                break;
+            }
+        }
     }
 
     public void ScrambleLetters(){
