@@ -20,8 +20,10 @@ public class LevelPresenter : MonoBehaviour
         string lettersText = string.Format("Letters: {0}", word);
         string regexText = string.Format("Regex: {0}", regex);
 
+        List<char> letters = new List<char>(word);
         levelView.SetLettersText(lettersText);
         levelView.SetRegexText(regexText);
+        levelView.SetInputLetters(letters);
         levelView.SetWordsRemaining(level.GetRemainingWords().Count);
         levelView.InitalizeWords(level.GetRemainingWords());
 

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class LevelView : MonoBehaviour
 {
     public WordPanelHandler wordPanelHandler;
+    public InputPanel inputPanel;
     public Text lettersTextbox;
     public Text regexTextbox;
     public Text foundBonusWords;
@@ -31,16 +32,20 @@ public class LevelView : MonoBehaviour
         regexTextbox.text = regex;
     }
 
+    public void SetInputLetters(List<char> letters){
+        inputPanel.Initalize(letters);
+    }
+
     public void ScrambleHandler(){
         levelPresenter.Scramble();
     }
 
-    public void InputHandler(){
+    public void SubmitWord(){
         levelPresenter.SubmitWord();
     }
 
     public string GetWord(){
-        return inputField.text;
+        return inputPanel.InputWord;
     }
 
     public void InitalizeWords(List<string> words){
