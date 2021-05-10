@@ -2,16 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
+using System.Collections.ObjectModel;
+using System.Linq;
 public class InputPanel : MonoBehaviour
 {
     [Range(0, 100)]
     public float radius;
     public GameObject letterPrefab;
-    List<char> letters;
+    ReadOnlyCollection<char> letters; // Read only because Constaint should handle mutation
     bool inputStarted = false; // Wether we are currently inputting a sequence of letters
     public List<GameObject> inputSequence = new List<GameObject>();
 
+    public LineManager lineManager;
     LevelView levelView;
 
     public string InputWord{
@@ -31,7 +33,7 @@ public class InputPanel : MonoBehaviour
     }
 
     public void Initalize(List<char> letters){
-        this.letters = letters;
+        this.letters = letters.AsReadOnly();
         foreach (char character in letters){
             GameObject letter = Instantiate(letterPrefab, transform);
             letter.GetComponent<Text>().text = character.ToString();
@@ -51,6 +53,30 @@ public class InputPanel : MonoBehaviour
         }
     }
 
+    // When called the letters in the array have already been scrambled
+    // so we just have to move them to the right place
+    public void Scramble(){
+        // TODO: Consider catching the possible exception
+        for(int i = 0; i < transform.childCount; i++){
+            string letter = letters[i].ToString();
+            Transform child = FindChildWithLetter(i, letter);
+            child.SetSiblingIndex(i);
+        }
+        PositionLetters();
+    }
+
+    Transform FindChildWithLetter(int start, string letter){
+        for(int i = start; i < transform.childCount; i++){
+            Transform child = transform.GetChild(i);
+
+            Text text = child.GetComponent<Text>();
+            if(text.text == letter){
+                return child;
+            }
+        }
+        throw new System.Exception(string.Format("Couldn't find child with letter {0}", letter));
+    }
+
     // Called when a letter is clicked
     public void BeginInput(){
         inputStarted = true;
@@ -58,13 +84,19 @@ public class InputPanel : MonoBehaviour
 
     public void EndInput(){
         inputStarted = false;
+        lineManager.ClearAllLines();
     }
 
-    // Called when a letter is hovered over
+    // Called when a letter is hovered over and additionally for the first letter
     public void LetterSelected(GameObject letterObj){
         if(inputStarted){
             if(!inputSequence.Contains(letterObj)){
                 inputSequence.Add(letterObj);
+                if(inputSequence.Count > 1){
+                    Vector3 previous = inputSequence[inputSequence.Count - 2].transform.position;
+                    Vector3 current = inputSequence[inputSequence.Count - 1].transform.position;
+                    lineManager.AddStaticLine(previous, current);
+                }
             }
         }
     }
@@ -77,6 +109,10 @@ public class InputPanel : MonoBehaviour
 
     void Update(){
         if(inputStarted){
+            Vector3 mousePoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            mousePoint.z = 90;
+            Vector3 previous = inputSequence[inputSequence.Count - 1].transform.position;
+            lineManager.UpdateDynamicLine(previous, mousePoint);
             if(Input.GetMouseButtonUp(0)){
                 SubmitWord();
             }

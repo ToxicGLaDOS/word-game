@@ -23,7 +23,8 @@ public class ConstraintBuilderHandler : MonoBehaviour
 
     public void ShowMatches(InputField inputField){
         string regex = inputField.text;
-        Constraint constraint = new Constraint(regex, lettersInput.text);
+        List<char> letters = new List<char>(lettersInput.text);
+        Constraint constraint = new Constraint(regex, letters);
         List<string> matches = dictionary.GetMatchingConstraint(constraint);
         numMatchesTextbox.text = string.Format("{0} matches", matches.Count);
 

@@ -14,14 +14,12 @@ public class LevelPresenter : MonoBehaviour
         level = new Level("Assets/Resources/words.txt");
         level.InitalizeRandom();
 
-        string word = level.Letters;
+        List<char> letters = level.Letters;
         string regex = level.RegexDefinition;
-
-        string lettersText = string.Format("Letters: {0}", word);
+        
         string regexText = string.Format("Regex: {0}", regex);
 
-        List<char> letters = new List<char>(word);
-        levelView.SetLettersText(lettersText);
+        SetLettersText(letters);
         levelView.SetRegexText(regexText);
         levelView.SetInputLetters(letters);
         levelView.SetWordsRemaining(level.GetRemainingWords().Count);
@@ -62,6 +60,12 @@ public class LevelPresenter : MonoBehaviour
 
     public void Scramble(){
         level.ScrambleLetters();
-        levelView.SetLettersText(string.Format("Letters: {0}", level.Letters));
+        SetLettersText(level.Letters);
+        levelView.ScrambleInput();
+    }
+
+    void SetLettersText(List<char> letters){
+        string lettersText = string.Format("Letters: {0}", new string(letters.ToArray()));
+        levelView.SetLettersText(lettersText);
     }
 }

@@ -8,7 +8,7 @@ public class Level
     public List<string> correctWords = new List<string>();
     public List<string> foundWords = new List<string>();
 
-    public string Letters
+    public List<char> Letters
     {
         get {return constraint.letters;}
     }
@@ -33,13 +33,38 @@ public class Level
         while(true){
             attempts++;
             string word = dictionary.RandomWord(7);
-            string regex = "^" + word[0] + ".*" + word[word.Length-1] + "$";
-            constraint = new Constraint(regex, word);
+            string regex = GetRegex(word);
+            List<char> listWord = new List<char>(word.ToCharArray());
+            constraint = new Constraint(regex, listWord);
             correctWords = dictionary.GetMatchingConstraint(constraint);
-            if(correctWords.Count > 8 && correctWords.Count < 20){
+            if(correctWords.Count > 5){
                 break;
             }
         }
+    }
+
+    string GetRegex(string word){
+        string regex = "^";
+        int length = word.Length;
+        int firstBound = length/2;
+        int secondBound = length;
+
+        int firstIndex = Random.Range(0, firstBound);
+        int secondIndex = Random.Range(firstBound, secondBound);
+
+        if(firstIndex > 0){
+            regex += ".*";
+        }
+        regex += word[firstIndex];
+        if(secondIndex > firstIndex + 1){
+            regex += ".*";
+        }
+        regex += word[secondIndex];
+        if(secondIndex < length - 1){
+            regex += ".*"; // This could be optional
+        }
+        regex += "$";
+        return regex;
     }
 
     public void ScrambleLetters(){

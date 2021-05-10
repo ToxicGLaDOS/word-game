@@ -40,6 +40,10 @@ public class LevelView : MonoBehaviour
         levelPresenter.Scramble();
     }
 
+    public void ScrambleInput(){
+        inputPanel.Scramble();
+    }
+
     public void SubmitWord(){
         levelPresenter.SubmitWord();
     }
