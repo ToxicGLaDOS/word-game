@@ -58,6 +58,13 @@ public class Dictionary
         return filtered[index];
     }
 
+    public string RandomWord(int length, int seed){
+        List<string> filtered = dictionary.FindAll(e => e.Length == length);
+        Random.InitState(seed);
+        int index = Random.Range(0, filtered.Count);
+        return filtered[index];
+    }
+
     void LoadDictionary(string dictionaryPath){
         string line;
         System.IO.StreamReader file = new System.IO.StreamReader(dictionaryPath);  

@@ -29,9 +29,7 @@ public class Level
     public void InitalizeRandom(){
         foundWords = new List<string>();
         correctWords = new List<string>();
-        int attempts = 0;
         while(true){
-            attempts++;
             string word = dictionary.RandomWord(7);
             string regex = GetRegex(word);
             List<char> listWord = new List<char>(word.ToCharArray());
@@ -41,6 +39,56 @@ public class Level
                 break;
             }
         }
+    }
+
+    public void InitalizeFromLevel(LevelData levelData){
+        foundWords = new List<string>();
+        correctWords = new List<string>();
+        string word = levelData.word;
+        string regex = levelData.regexDefinition;
+        List<char> listWord = new List<char>(word.ToCharArray());
+        constraint = new Constraint(regex, listWord);
+        correctWords = dictionary.GetMatchingConstraint(constraint);
+    }
+
+    public void InitalizeFromCriteria(int level, int numLetters){
+        foundWords = new List<string>();
+        correctWords = new List<string>();
+        string word = dictionary.RandomWord(numLetters, level);
+        string regex = GetRegex(word);
+        List<char> listWord = new List<char>(word.ToCharArray());
+        constraint = new Constraint(regex, listWord);
+        correctWords = dictionary.GetMatchingConstraint(constraint);
+    }
+
+    public void InitalizeFromCriteria(int numLetters, int minValid, int maxValid){
+        foundWords = new List<string>();
+        correctWords = new List<string>();
+        int attempts = 0;
+        while(true){
+            string word = dictionary.RandomWord(numLetters);
+            string regex = GetRegex(word);
+            List<char> listWord = new List<char>(word.ToCharArray());
+            constraint = new Constraint(regex, listWord);
+            correctWords = dictionary.GetMatchingConstraint(constraint);
+            if(correctWords.Count >= minValid && correctWords.Count <= maxValid){
+                break;
+            }
+            // Failsafe to prevent infinite loops
+            if(attempts > 10000){
+                break;
+            }
+            attempts++;
+        }
+    }
+
+    public void InitalizeSpecific(string word){
+        foundWords = new List<string>();
+        correctWords = new List<string>();
+        string regex = GetRegex(word);
+        List<char> listWord = new List<char>(word.ToCharArray());
+        constraint = new Constraint(regex, listWord);
+        correctWords = dictionary.GetMatchingConstraint(constraint);
     }
 
     string GetRegex(string word){

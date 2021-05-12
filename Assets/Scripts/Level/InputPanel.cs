@@ -33,6 +33,13 @@ public class InputPanel : MonoBehaviour
     }
 
     public void Initalize(List<char> letters){
+        // Delete all children
+        // If this is called after the input panel has been initalized
+        // than we want to get rid of the old characters
+        foreach (Transform child in transform){
+            child.gameObject.SetActive(false);
+            Destroy(child.gameObject);
+        }
         this.letters = letters.AsReadOnly();
         foreach (char character in letters){
             GameObject letter = Instantiate(letterPrefab, transform);
@@ -42,14 +49,25 @@ public class InputPanel : MonoBehaviour
     }
 
     void PositionLetters(){
+        // We need to count only the active children because
+        // when initalizing another level the old children won't be destroyed yet
+        // so we use the activeness to decided whether they're new or old
+        int activeChildCount = 0;
+        foreach(Transform child in transform){
+            if (child.gameObject.activeInHierarchy){
+                activeChildCount++;
+            }
+        }
         float theta = 0;
-        float thetaDelta = 2 * Mathf.PI / transform.childCount;
+        float thetaDelta = 2 * Mathf.PI / activeChildCount;
         foreach(Transform childTransform in transform){
-            childTransform.localPosition = Vector2.zero;
-            float x = radius * Mathf.Cos(theta);
-            float y = radius * Mathf.Sin(theta);
-            childTransform.localPosition = new Vector2(x, y);
-            theta += thetaDelta;
+            if (childTransform.gameObject.activeInHierarchy){
+                childTransform.localPosition = Vector2.zero;
+                float x = radius * Mathf.Cos(theta);
+                float y = radius * Mathf.Sin(theta);
+                childTransform.localPosition = new Vector2(x, y);
+                theta += thetaDelta;
+            }
         }
     }
 

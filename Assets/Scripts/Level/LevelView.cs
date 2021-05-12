@@ -12,6 +12,8 @@ public class LevelView : MonoBehaviour
     public Text foundBonusWords;
     public Text messageText;
     public Text wordsRemainingCounter;
+    public Text successText;
+    public Button nextLevelButton;
     public InputField inputField;
     private LevelPresenter levelPresenter;
     // Start is called before the first frame update
@@ -53,7 +55,7 @@ public class LevelView : MonoBehaviour
     }
 
     public void InitalizeWords(List<string> words){
-        wordPanelHandler.AddWords(words);
+        wordPanelHandler.InitalizeWords(words);
     }
 
     public void AddCorrectWord(string word){
@@ -67,5 +69,16 @@ public class LevelView : MonoBehaviour
     public void DisplayMessage(string message){
         messageText.GetComponent<FadeText>().ResetAlpha();
         messageText.text = message;
+    }
+
+    public void GotoNextLevel(){
+        levelPresenter.GotoNextLevel();
+        successText.gameObject.SetActive(false);
+        nextLevelButton.gameObject.SetActive(false);
+    }
+
+    public void EndLevel(){
+        successText.gameObject.SetActive(true);
+        nextLevelButton.gameObject.SetActive(true);
     }
 }

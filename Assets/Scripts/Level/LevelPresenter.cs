@@ -7,13 +7,21 @@ public class LevelPresenter : MonoBehaviour
 {
     private Level level;
     private LevelView levelView;
+
+    private int seed = 2;
+
     // Start is called before the first frame update
     void Start()
     {
         levelView = FindObjectOfType<LevelView>();
-        level = new Level("Assets/Resources/words.txt");
-        level.InitalizeRandom();
+        level = new Level(GlobalValues.dictionaryPath);
+        Initalize();
 
+    }
+
+    void Initalize(){
+        level.InitalizeFromLevel(GlobalValues.levelData);
+        seed++;
         List<char> letters = level.Letters;
         string regex = level.RegexDefinition;
         
@@ -36,11 +44,7 @@ public class LevelPresenter : MonoBehaviour
                 levelView.DisplayMessage("You already found that word.");
                 break;
             case Level.WordValidity.Correct:
-                level.AddFoundWord(word);
-                int wordsRemaining = level.GetRemainingWords().Count;
-                levelView.AddCorrectWord(word);
-                levelView.DisplayMessage("You found a correct word!");
-                levelView.SetWordsRemaining(wordsRemaining);
+                CorrectWord(word);
                 break;
             case Level.WordValidity.Bonus:
                 level.AddFoundWord(word);
@@ -55,6 +59,30 @@ public class LevelPresenter : MonoBehaviour
                 break;
             default:
                 throw new System.Exception(string.Format("Found unimplemented validity {0}", validity.ToString()));
+        }
+    }
+
+    void CorrectWord(string word){
+        level.AddFoundWord(word);
+        int wordsRemaining = level.GetRemainingWords().Count;
+        levelView.AddCorrectWord(word);
+        levelView.DisplayMessage("You found a correct word!");
+        levelView.SetWordsRemaining(wordsRemaining);
+
+        // If we found all the words
+        if (level.foundWords.Count == level.correctWords.Count){
+            levelView.EndLevel();
+        }
+    }
+
+    public void GotoNextLevel(){
+        GlobalValues.level++;
+        Initalize();
+    }
+
+    public void Solve(){
+        foreach(string word in level.correctWords){
+            CorrectWord(word);
         }
     }
 
