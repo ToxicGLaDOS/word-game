@@ -74,8 +74,6 @@ public class CreateLevelData : EditorWindow
         prefab.transform.localScale = Vector3.one;
 
         UnityEventTools.AddObjectPersistentListener<LevelData>(button.onClick, buttonFunction, levelData);
-        //UnityEventTools.AddPersistentListener(button.onClick, buttonFunction);
-        //prefab.transform.GetComponentInChildren<Button>().onClick.AddListener( () => buttonFunction(levelData));
         prefab.transform.GetComponentInChildren<Text>().text = name;
     }
 
