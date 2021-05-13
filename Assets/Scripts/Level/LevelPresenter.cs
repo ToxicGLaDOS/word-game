@@ -77,8 +77,16 @@ public class LevelPresenter : MonoBehaviour
     }
 
     public void GotoNextLevel(){
-        GlobalValues.level++;
-        Initalize();
+        int nextLevelIndex = int.Parse(GlobalValues.levelData.name) + 1;
+        LevelData nextLevelData = Resources.Load<LevelData>(string.Format("LevelData/{0}/{1}", GlobalValues.levelData.group, nextLevelIndex.ToString()));
+        if(nextLevelData != null){
+            GlobalValues.levelData = nextLevelData;
+            Initalize();
+        }
+        else{
+            // TODO: Either go to next group or generate level from here
+            Debug.Log("Out of levels.");
+        }
     }
 
     public void Solve(){

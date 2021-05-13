@@ -13,7 +13,7 @@ public class CreateLevelData : EditorWindow
 {
     public GameObject levelSelectOptionPrefab;
     int numLetters;
-    int minValid;
+    int minValid = 3;
     int maxValid = 40;
     int folderNameIndex;
     List<string> folderNames = new List<string>();
@@ -35,6 +35,7 @@ public class CreateLevelData : EditorWindow
     }
 
     void CreateScriptableObject(){
+        string folderName = folderNames[folderNameIndex];
         LevelData levelData = ScriptableObject.CreateInstance<LevelData>();
         bool success = level.InitalizeFromCriteria(numLetters, minValid, maxValid);
         if(!success){
@@ -43,8 +44,9 @@ public class CreateLevelData : EditorWindow
         }
         levelData.word = new string(level.Letters.ToArray());
         levelData.regexDefinition = level.RegexDefinition;
+        levelData.group = folderName;
         int newLevelNumber = 0;
-        foreach(string path in Directory.GetFiles(levelDataPath + "/" + folderNames[folderNameIndex])){
+        foreach(string path in Directory.GetFiles(levelDataPath + "/" + folderName)){
             // Watch out for those .meta files
             if(Path.GetExtension(path) == ".asset"){
                 string file = Path.GetFileNameWithoutExtension(path);
@@ -54,7 +56,7 @@ public class CreateLevelData : EditorWindow
                 }
             }
         }
-        AssetDatabase.CreateAsset(levelData, string.Format(levelDataPath + "/Mercury/{0}.asset", newLevelNumber));
+        AssetDatabase.CreateAsset(levelData, string.Format(levelDataPath + "/" + folderName + "/{0}.asset", newLevelNumber));
         AssetDatabase.SaveAssets();
 
         EditorUtility.FocusProjectWindow();
@@ -97,37 +99,52 @@ public class CreateLevelData : EditorWindow
             return;
         }
         GameObject panel = content.transform.Find(folderNames[folderNameIndex]).gameObject;
+        GameObject levels = panel.transform.Find("Levels").gameObject;
         // Create a copy of the children list because we can't
         // iterate over it and destroy at the same time
-        List<Transform> panelChildren = new List<Transform>();
-        foreach(Transform child in panel.transform){
-            panelChildren.Add(child);
+        List<Transform> levelsChildren = new List<Transform>();
+        foreach(Transform child in levels.transform){
+            levelsChildren.Add(child);
         }
-        foreach(Transform child in panelChildren){
+        foreach(Transform child in levelsChildren){
             DestroyImmediate(child.gameObject);
         }
+        List<string> paths = GetSortedPaths();
+        foreach(string path in paths){
+            string file = Path.GetFileNameWithoutExtension(path);
+            int levelNumber = int.Parse(file);
 
-        foreach(string path in Directory.GetFiles(levelDataPath + "/" + folderNames[folderNameIndex])){
-            // Watch out for those .meta files
+            // We have to mangle the path because Resources.Load()
+            // expects the path to be relative to the Resources folder
+            string resourcePath = path.Replace("Assets/Resources/", "");
+            resourcePath = Path.GetDirectoryName(resourcePath);
+            resourcePath = Path.Combine(resourcePath, file);
+            LevelData levelData = Resources.Load<LevelData>(resourcePath);
+            if(levelData == null){
+                Debug.LogWarning(string.Format("Failed to load levelData at path \"{0}\", skipping", resourcePath));
+                continue;
+            }
+
+            CreateLevelSelectPrefab(levelNumber.ToString(), levels.transform, levelSelectAction, levelData);
+        }
+    }
+
+    List<string> GetSortedPaths(){
+        List<string> paths = new List<string>();
+        List<int> pathValues = new List<int>();
+        foreach (string path in Directory.GetFiles(levelDataPath + "/" + folderNames[folderNameIndex])){
+            // Don't include .meta files
             if(Path.GetExtension(path) == ".asset"){
-                
+                paths.Add(path);
                 string file = Path.GetFileNameWithoutExtension(path);
-                int levelNumber = int.Parse(file);
-
-                // We have to mangle the path because Resources.Load()
-                // expects the path to be relative to the Resources folder
-                string resourcePath = path.Replace("Assets/Resources/", "");
-                resourcePath = Path.GetDirectoryName(resourcePath);
-                resourcePath = Path.Combine(resourcePath, file);
-                LevelData levelData = Resources.Load<LevelData>(resourcePath);
-                if(levelData == null){
-                    Debug.LogWarning(string.Format("Failed to load levelData at path \"{0}\", skipping", resourcePath));
-                    continue;
-                }
-
-                CreateLevelSelectPrefab(levelNumber.ToString(), panel.transform, levelSelectAction, levelData);
+                pathValues.Add(int.Parse(file));
             }
         }
+        string[] pathsArray = paths.ToArray();
+        Array.Sort(pathValues.ToArray(), pathsArray);
+        paths = new List<string>(pathsArray);
+
+        return paths;
     }
 
     void OnGUI(){
@@ -138,7 +155,7 @@ public class CreateLevelData : EditorWindow
         EditorGUILayout.LabelField("Max: ", maxValid.ToString());
         float fmin = minValid;
         float fmax = maxValid;
-        EditorGUILayout.MinMaxSlider(ref fmin, ref fmax, 0, 40);
+        EditorGUILayout.MinMaxSlider(ref fmin, ref fmax, 3, 40);
         minValid = (int)fmin;
         maxValid = (int)fmax;
         EditorGUILayout.Popup("Folder Name", folderNameIndex, folderNames.ToArray(), EditorStyles.popup);
