@@ -17,6 +17,14 @@ public class MainMenuView : MonoBehaviour
         
     }
 
+    public void Test(GameObject go){
+        Debug.Log(string.Format("Success {0}", go));
+    }
+
+    public void Test(LevelData level){
+        Debug.Log("Success");
+    }
+
     public void SelectLevel(LevelData level){
         presenter.SelectLevel(level);
     }

@@ -61,7 +61,7 @@ public class Level
         correctWords = dictionary.GetMatchingConstraint(constraint);
     }
 
-    public void InitalizeFromCriteria(int numLetters, int minValid, int maxValid){
+    public bool InitalizeFromCriteria(int numLetters, int minValid, int maxValid){
         foundWords = new List<string>();
         correctWords = new List<string>();
         int attempts = 0;
@@ -75,11 +75,12 @@ public class Level
                 break;
             }
             // Failsafe to prevent infinite loops
-            if(attempts > 10000){
-                break;
+            if(attempts > 100){
+                return false;
             }
             attempts++;
         }
+        return true;
     }
 
     public void InitalizeSpecific(string word){

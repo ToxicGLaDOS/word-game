@@ -3,7 +3,10 @@ guid: 3650d54308715e347b53299d592d9cb4
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - m_ViewDataDictionary: {instanceID: 0}
+  - levelSelectOptionPrefab: {fileID: 4314911643868023428, guid: 48f3214bbf6bda84ea7cb9c416ac2da5,
+      type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
