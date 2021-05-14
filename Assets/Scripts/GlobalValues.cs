@@ -6,5 +6,6 @@ public class GlobalValues : MonoBehaviour
 {
     public static LevelData levelData;
 
-    public static string dictionaryPath = "Assets/Resources/words.txt";
+    // The path to the dictionary relative from the resources folder (no extention)
+    public static string dictionaryPath = "words";
 }

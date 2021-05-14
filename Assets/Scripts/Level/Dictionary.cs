@@ -66,12 +66,8 @@ public class Dictionary
     }
 
     void LoadDictionary(string dictionaryPath){
-        string line;
-        System.IO.StreamReader file = new System.IO.StreamReader(dictionaryPath);  
-        while((line = file.ReadLine()) != null)  
-        {
-            dictionary.Add(line);
-        }  
-        file.Close();  
+        TextAsset dictTextAsset = Resources.Load<TextAsset>(dictionaryPath);
+        string [] words = dictTextAsset.text.Split(new[] {"\n"}, System.StringSplitOptions.None);
+        dictionary = new List<string>(words);
     }
 }

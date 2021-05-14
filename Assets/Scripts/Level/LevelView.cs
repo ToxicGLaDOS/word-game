@@ -23,13 +23,6 @@ public class LevelView : MonoBehaviour
         wordPanelHandler = FindObjectOfType<WordPanelHandler>();
     }
 
-    public void SetWordsRemaining(int amount){
-        wordsRemainingCounter.text = string.Format("Words remaining: {0}", amount.ToString());
-    }
-    public void SetLettersText(string letters){
-        lettersTextbox.text = letters;
-    }
-
     public void SetRegexText(string regex){
         regexTextbox.text = regex;
     }

@@ -31,7 +31,6 @@ public class LevelPresenter : MonoBehaviour
         SetLettersText(letters);
         levelView.SetRegexText(regexText);
         levelView.SetInputLetters(letters);
-        levelView.SetWordsRemaining(level.GetRemainingWords().Count);
         levelView.InitalizeWords(level.GetRemainingWords());
 
     }
@@ -68,7 +67,6 @@ public class LevelPresenter : MonoBehaviour
         int wordsRemaining = level.GetRemainingWords().Count;
         levelView.AddCorrectWord(word);
         levelView.DisplayMessage("You found a correct word!");
-        levelView.SetWordsRemaining(wordsRemaining);
 
         // If we found all the words
         if (level.foundWords.Count == level.correctWords.Count){
@@ -103,6 +101,5 @@ public class LevelPresenter : MonoBehaviour
 
     void SetLettersText(List<char> letters){
         string lettersText = string.Format("Letters: {0}", new string(letters.ToArray()));
-        levelView.SetLettersText(lettersText);
     }
 }
