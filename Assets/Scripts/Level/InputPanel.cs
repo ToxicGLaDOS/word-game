@@ -6,8 +6,10 @@ using System.Collections.ObjectModel;
 using System.Linq;
 public class InputPanel : MonoBehaviour
 {
-    [Range(0, 100)]
-    public float radius;
+    [Range(0, 500)]
+    // This is the amount of padding the image has between
+    // the true edge of the image and where the letters should be placed
+    public float imagePadding;
     public GameObject letterPrefab;
     ReadOnlyCollection<char> letters; // Read only because Constaint should handle mutation
     bool inputStarted = false; // Wether we are currently inputting a sequence of letters
@@ -49,6 +51,7 @@ public class InputPanel : MonoBehaviour
     }
 
     void PositionLetters(){
+        float radius = GetComponent<RectTransform>().rect.width / 2 - imagePadding;
         // We need to count only the active children because
         // when initalizing another level the old children won't be destroyed yet
         // so we use the activeness to decided whether they're new or old
