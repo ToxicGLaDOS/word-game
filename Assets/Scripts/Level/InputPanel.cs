@@ -49,6 +49,14 @@ public class InputPanel : MonoBehaviour
             GameObject letter = Instantiate(letterPrefab, inputLetters);
             letter.GetComponentInChildren<Text>().text = character.ToString();
         }
+        GroupData groupData = GlobalValues.levelData.groupData;
+        Image image = GetComponent<Image>();
+        image.sprite = groupData.panelSprite;
+
+        foreach(Transform child in inputLetters){
+            child.GetComponentInChildren<Text>().color = groupData.textColor;
+        }
+
         PositionLetters();
     }
 

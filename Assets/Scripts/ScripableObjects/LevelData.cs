@@ -7,5 +7,5 @@ public class LevelData : ScriptableObject
 
     public string word;
     public string regexDefinition;
-    public string group;
+    public GroupData groupData;
 }

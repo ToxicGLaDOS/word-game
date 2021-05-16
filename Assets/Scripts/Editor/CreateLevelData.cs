@@ -21,6 +21,7 @@ public class CreateLevelData : EditorWindow
     int value;
 
     string levelDataPath = "Assets/Resources/LevelData";
+    string groupDataResourcePath = "GroupData";
 
     [MenuItem("Assets/Create/Level")]
     public static void OpenWindow(){
@@ -44,7 +45,7 @@ public class CreateLevelData : EditorWindow
         }
         levelData.word = new string(level.Letters.ToArray());
         levelData.regexDefinition = level.RegexDefinition;
-        levelData.group = folderName;
+        levelData.groupData = Resources.Load<GroupData>(groupDataResourcePath + "/" + folderName);
         int newLevelNumber = 0;
         foreach(string path in Directory.GetFiles(levelDataPath + "/" + folderName)){
             // Watch out for those .meta files
@@ -82,24 +83,26 @@ public class CreateLevelData : EditorWindow
     void RefreshLevelSelectPrefabs(){
         MainMenuView mainMenuView = FindObjectOfType<MainMenuView>();
         if (mainMenuView == null){
-            Debug.Log("Couldn't find main menu view in hierarchy. Ensure you're in the correct scene");
+            Debug.LogWarning("Couldn't find main menu view in hierarchy. Ensure you're in the correct scene");
+            return;
         }
         UnityAction<LevelData> levelSelectAction = new UnityAction<LevelData>(mainMenuView.SelectLevel);
         if(levelSelectAction == null){
-            Debug.Log("Couldn't find function to select level on interatction handler.");
+            Debug.LogWarning("Couldn't find function to select level on interatction handler.");
+            return;
         }
         GameObject levelSelect = GameObject.Find("LevelSelect");
         if (levelSelect == null){
-            Debug.Log("Couldn't find level select object in hierarchy. Perhaps you're on the wrong scene");
+            Debug.LogWarning("Couldn't find level select object in hierarchy. Perhaps you're on the wrong scene");
             return;
         }
         GameObject content = levelSelect.transform.GetChild(0).GetChild(0).GetChild(0).gameObject;
         if (content.name != "Content"){
-            Debug.Log("LevelSelect hierarchy is not what was expected");
+            Debug.LogWarning("LevelSelect hierarchy is not what was expected");
             return;
         }
         GameObject panel = content.transform.Find(folderNames[folderNameIndex]).gameObject;
-        GameObject levels = panel.transform.Find("Levels").gameObject;
+        GameObject levels = FindDeepChild(panel.transform, "Levels").gameObject;
         // Create a copy of the children list because we can't
         // iterate over it and destroy at the same time
         List<Transform> levelsChildren = new List<Transform>();
@@ -127,6 +130,22 @@ public class CreateLevelData : EditorWindow
 
             CreateLevelSelectPrefab(levelNumber.ToString(), levels.transform, levelSelectAction, levelData);
         }
+    }
+
+    public Transform FindDeepChild(Transform parentTransform, string childName){
+        Transform correctChild = parentTransform.Find(childName);
+        if(correctChild != null){
+            return correctChild;
+        }
+        else{
+            foreach(Transform child in parentTransform){
+                correctChild = FindDeepChild(child, childName);
+                if(correctChild != null){
+                    return correctChild;
+                }
+            }
+        }
+        return null;
     }
 
     List<string> GetSortedPaths(){

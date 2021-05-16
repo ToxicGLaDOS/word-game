@@ -76,7 +76,7 @@ public class LevelPresenter : MonoBehaviour
 
     public void GotoNextLevel(){
         int nextLevelIndex = int.Parse(GlobalValues.levelData.name) + 1;
-        LevelData nextLevelData = Resources.Load<LevelData>(string.Format("LevelData/{0}/{1}", GlobalValues.levelData.group, nextLevelIndex.ToString()));
+        LevelData nextLevelData = Resources.Load<LevelData>(string.Format("LevelData/{0}/{1}", GlobalValues.levelData.groupData.name, nextLevelIndex.ToString()));
         if(nextLevelData != null){
             GlobalValues.levelData = nextLevelData;
             Initalize();
