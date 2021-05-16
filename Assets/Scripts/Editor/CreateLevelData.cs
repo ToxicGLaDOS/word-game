@@ -22,6 +22,7 @@ public class CreateLevelData : EditorWindow
 
     string levelDataPath = "Assets/Resources/LevelData";
     string groupDataResourcePath = "GroupData";
+    string levelSelectGroupsPath = "Assets/Prefabs/LevelSelectGroups/";
 
     [MenuItem("Assets/Create/Level")]
     public static void OpenWindow(){
@@ -30,8 +31,9 @@ public class CreateLevelData : EditorWindow
 
     void Awake(){
         level = new Level(GlobalValues.dictionaryPath);
-        foreach(string path in Directory.GetDirectories(levelDataPath)){
-            folderNames.Add(Path.GetFileName(path));
+        GroupData[] groupDataArray = Resources.LoadAll<GroupData>(groupDataResourcePath);
+        foreach(GroupData groupData in groupDataArray){
+            folderNames.Add(groupData.name);
         }
     }
 
@@ -47,6 +49,11 @@ public class CreateLevelData : EditorWindow
         levelData.regexDefinition = level.RegexDefinition;
         levelData.groupData = Resources.Load<GroupData>(groupDataResourcePath + "/" + folderName);
         int newLevelNumber = 0;
+        
+        // If the folder doesn't exist create it
+        if(Array.IndexOf(Directory.GetDirectories(levelDataPath), folderName) == -1){
+            Directory.CreateDirectory(levelDataPath + "/" + folderName);
+        }
         foreach(string path in Directory.GetFiles(levelDataPath + "/" + folderName)){
             // Watch out for those .meta files
             if(Path.GetExtension(path) == ".asset"){
@@ -78,9 +85,11 @@ public class CreateLevelData : EditorWindow
 
         UnityEventTools.AddObjectPersistentListener<LevelData>(button.onClick, buttonFunction, levelData);
         prefab.transform.GetComponentInChildren<Text>().text = name;
+
     }
 
     void RefreshLevelSelectPrefabs(){
+        string folderName = folderNames[folderNameIndex];
         MainMenuView mainMenuView = FindObjectOfType<MainMenuView>();
         if (mainMenuView == null){
             Debug.LogWarning("Couldn't find main menu view in hierarchy. Ensure you're in the correct scene");
@@ -91,18 +100,17 @@ public class CreateLevelData : EditorWindow
             Debug.LogWarning("Couldn't find function to select level on interatction handler.");
             return;
         }
-        GameObject levelSelect = GameObject.Find("LevelSelect");
-        if (levelSelect == null){
-            Debug.LogWarning("Couldn't find level select object in hierarchy. Perhaps you're on the wrong scene");
+        GameObject groupPrefab = PrefabUtility.LoadPrefabContents(levelSelectGroupsPath + folderName + ".prefab");
+        if (groupPrefab == null){
+            Debug.LogWarning(string.Format("Couldn't find group prefab for group {0}", folderName));
             return;
         }
-        GameObject content = levelSelect.transform.GetChild(0).GetChild(0).GetChild(0).gameObject;
-        if (content.name != "Content"){
-            Debug.LogWarning("LevelSelect hierarchy is not what was expected");
+        Transform levels = FindDeepChild(groupPrefab.transform, "Levels");
+        if (levels == null){
+            Debug.LogWarning("Couldn't find \"Levels\" object in prefab");
             return;
         }
-        GameObject panel = content.transform.Find(folderNames[folderNameIndex]).gameObject;
-        GameObject levels = FindDeepChild(panel.transform, "Levels").gameObject;
+
         // Create a copy of the children list because we can't
         // iterate over it and destroy at the same time
         List<Transform> levelsChildren = new List<Transform>();
@@ -130,6 +138,7 @@ public class CreateLevelData : EditorWindow
 
             CreateLevelSelectPrefab(levelNumber.ToString(), levels.transform, levelSelectAction, levelData);
         }
+        PrefabUtility.SaveAsPrefabAsset(groupPrefab, levelSelectGroupsPath + folderName + ".prefab");
     }
 
     public Transform FindDeepChild(Transform parentTransform, string childName){
@@ -177,7 +186,7 @@ public class CreateLevelData : EditorWindow
         EditorGUILayout.MinMaxSlider(ref fmin, ref fmax, 3, 40);
         minValid = (int)fmin;
         maxValid = (int)fmax;
-        EditorGUILayout.Popup("Folder Name", folderNameIndex, folderNames.ToArray(), EditorStyles.popup);
+        folderNameIndex = EditorGUILayout.Popup("Folder Name", folderNameIndex, folderNames.ToArray(), EditorStyles.popup);
 
         if(GUILayout.Button("Create")){
             CreateScriptableObject();

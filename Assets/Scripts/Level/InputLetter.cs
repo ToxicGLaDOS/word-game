@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-
+using UnityEditor;
 public class InputLetter : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
 {
     InputPanel inputPanel;
