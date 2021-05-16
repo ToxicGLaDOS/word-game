@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.ObjectModel;
 using System.Linq;
+using UnityEngine.UI.Extensions;
 public class InputPanel : MonoBehaviour
 {
     [Range(0, 500)]
@@ -14,15 +15,15 @@ public class InputPanel : MonoBehaviour
     ReadOnlyCollection<char> letters; // Read only because Constaint should handle mutation
     bool inputStarted = false; // Wether we are currently inputting a sequence of letters
     public List<GameObject> inputSequence = new List<GameObject>();
-
-    public LineManager lineManager;
+    public Transform inputLetters;
+    UILineRenderer uiLineRenderer;
     LevelView levelView;
 
     public string InputWord{
         get {
             string s = "";
             foreach(GameObject letterObj in inputSequence){
-                s += char.Parse(letterObj.GetComponent<Text>().text);
+                s += char.Parse(letterObj.GetComponentInChildren<Text>().text);
             }
             return s;
         }
@@ -31,6 +32,7 @@ public class InputPanel : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        uiLineRenderer = GetComponentInChildren<UILineRenderer>();
         levelView = FindObjectOfType<LevelView>();
     }
 
@@ -38,14 +40,14 @@ public class InputPanel : MonoBehaviour
         // Delete all children
         // If this is called after the input panel has been initalized
         // than we want to get rid of the old characters
-        foreach (Transform child in transform){
+        foreach (Transform child in inputLetters){
             child.gameObject.SetActive(false);
             Destroy(child.gameObject);
         }
         this.letters = letters.AsReadOnly();
         foreach (char character in letters){
-            GameObject letter = Instantiate(letterPrefab, transform);
-            letter.GetComponent<Text>().text = character.ToString();
+            GameObject letter = Instantiate(letterPrefab, inputLetters);
+            letter.GetComponentInChildren<Text>().text = character.ToString();
         }
         PositionLetters();
     }
@@ -56,14 +58,15 @@ public class InputPanel : MonoBehaviour
         // when initalizing another level the old children won't be destroyed yet
         // so we use the activeness to decided whether they're new or old
         int activeChildCount = 0;
-        foreach(Transform child in transform){
+        foreach(Transform child in inputLetters){
             if (child.gameObject.activeInHierarchy){
                 activeChildCount++;
             }
         }
+
         float theta = 0;
         float thetaDelta = 2 * Mathf.PI / activeChildCount;
-        foreach(Transform childTransform in transform){
+        foreach(Transform childTransform in inputLetters){
             if (childTransform.gameObject.activeInHierarchy){
                 childTransform.localPosition = Vector2.zero;
                 float x = radius * Mathf.Cos(theta);
@@ -104,36 +107,47 @@ public class InputPanel : MonoBehaviour
     }
 
     public void EndInput(){
+        foreach(GameObject letterObj in inputSequence){
+            // TODO: This is potentially slow, consider putting the InputLetters in the
+            // inputSequence list instead
+            letterObj.GetComponent<InputLetter>().DeselectLetter();
+        }
         inputStarted = false;
-        lineManager.ClearAllLines();
+        inputSequence.Clear();
+        uiLineRenderer.Points = new Vector2[1];
     }
 
     // Called when a letter is hovered over and additionally for the first letter
-    public void LetterSelected(GameObject letterObj){
+    public void LetterSelected(InputLetter letter){
+        GameObject letterGameObject = letter.gameObject;
         if(inputStarted){
-            if(!inputSequence.Contains(letterObj)){
-                inputSequence.Add(letterObj);
-                if(inputSequence.Count > 1){
-                    Vector3 previous = inputSequence[inputSequence.Count - 2].transform.position;
-                    Vector3 current = inputSequence[inputSequence.Count - 1].transform.position;
-                    lineManager.AddStaticLine(previous, current);
-                }
+            if(!inputSequence.Contains(letterGameObject)){
+                inputSequence.Add(letterGameObject);
+                letter.SelectLetter();
+                Vector3 newPoint = transform.InverseTransformPoint(inputSequence[inputSequence.Count - 1].transform.position);
+                List<Vector2> points = new List<Vector2>(uiLineRenderer.Points);
+                // Insert 1 before the last point because the last point is handled by the cursor
+                // uiLineRenderer.Points should always have at least one point because it freaks out
+                // if you have 0, so even if this is the first point we should be safe to insert at
+                // points.Count - 1
+                points.Insert(points.Count - 1, newPoint);
+                uiLineRenderer.Points = points.ToArray();
             }
         }
     }
 
     void SubmitWord(){
         levelView.SubmitWord();
-        inputSequence.Clear();
         EndInput();
     }
 
     void Update(){
         if(inputStarted){
             Vector3 mousePoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            mousePoint.z = 90;
-            Vector3 previous = inputSequence[inputSequence.Count - 1].transform.position;
-            lineManager.UpdateDynamicLine(previous, mousePoint);
+            mousePoint = transform.InverseTransformPoint(mousePoint);
+
+            uiLineRenderer.Points[uiLineRenderer.Points.Length - 1] = mousePoint;
+            uiLineRenderer.SetAllDirty(); // We have to set dirty because setting at an index doesn't do it for us
             if(Input.GetMouseButtonUp(0)){
                 SubmitWord();
             }
