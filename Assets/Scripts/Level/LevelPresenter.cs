@@ -69,7 +69,7 @@ public class LevelPresenter : MonoBehaviour
         levelView.DisplayMessage("You found a correct word!");
 
         // If we found all the words
-        if (level.foundWords.Count == level.correctWords.Count){
+        if (level.FoundAllWords()){
             levelView.EndLevel();
         }
     }

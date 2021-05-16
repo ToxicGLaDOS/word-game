@@ -116,9 +116,21 @@ public class Level
         return regex;
     }
 
+    public bool FoundAllWords(){
+        int correctCount = 0;
+        foreach(string word in foundWords){
+            if(correctWords.Contains(word)){
+                correctCount++;
+            }
+        }
+
+        return correctCount == correctWords.Count;
+    }
+
     public void ScrambleLetters(){
         constraint.ScrambleLetters();
     }
+
     public void AddFoundWord(string word){
         foundWords.Add(word);
     }
