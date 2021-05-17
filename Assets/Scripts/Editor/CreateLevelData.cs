@@ -21,6 +21,7 @@ public class CreateLevelData : EditorWindow
     int value;
 
     string levelDataPath = "Assets/Resources/LevelData";
+    string levelDataResourcePath = "LevelData/";
     string groupDataResourcePath = "GroupData";
     string levelSelectGroupsPath = "Assets/Prefabs/LevelSelectGroups/";
 
@@ -38,6 +39,9 @@ public class CreateLevelData : EditorWindow
     }
 
     void CreateScriptableObject(){
+        if(level == null){
+            level = new Level(GlobalValues.dictionaryPath);
+        }
         string folderName = folderNames[folderNameIndex];
         LevelData levelData = ScriptableObject.CreateInstance<LevelData>();
         bool success = level.InitalizeFromCriteria(numLetters, minValid, maxValid);
@@ -73,19 +77,16 @@ public class CreateLevelData : EditorWindow
 
     }
 
-    void CreateLevelSelectPrefab(string name, Transform parentTransform, UnityAction<LevelData> buttonFunction, LevelData levelData){
+    void AddChildToLevelSelectPrefab(string name, Transform levelSelect){
         GameObject prefab = (GameObject)PrefabUtility.InstantiatePrefab(levelSelectOptionPrefab);
         prefab.name = name;
         Button button = prefab.GetComponentInChildren<Button>();
 
-        prefab.transform.SetParent(parentTransform, false);
+        prefab.transform.SetParent(levelSelect, false);
         prefab.transform.localPosition = Vector3.zero;
         prefab.transform.localEulerAngles = Vector3.zero;
         prefab.transform.localScale = Vector3.one;
-
-        UnityEventTools.AddObjectPersistentListener<LevelData>(button.onClick, buttonFunction, levelData);
         prefab.transform.GetComponentInChildren<Text>().text = name;
-
     }
 
     void RefreshLevelSelectPrefabs(){
@@ -135,10 +136,54 @@ public class CreateLevelData : EditorWindow
                 Debug.LogWarning(string.Format("Failed to load levelData at path \"{0}\", skipping", resourcePath));
                 continue;
             }
-
-            CreateLevelSelectPrefab(levelNumber.ToString(), levels.transform, levelSelectAction, levelData);
+            AddChildToLevelSelectPrefab(file, levels.transform);
         }
         PrefabUtility.SaveAsPrefabAsset(groupPrefab, levelSelectGroupsPath + folderName + ".prefab");
+
+        RefreshListeners();
+    }
+
+    public void RefreshListeners(){
+        MainMenuView mainMenuView = FindObjectOfType<MainMenuView>();
+        if (mainMenuView == null){
+            Debug.LogWarning("Couldn't find main menu view in hierarchy. Ensure you're in the correct scene");
+            return;
+        }
+        UnityAction<LevelData> levelSelectAction = new UnityAction<LevelData>(mainMenuView.SelectLevel);
+        if(levelSelectAction == null){
+            Debug.LogWarning("Couldn't find function to select level on interatction handler.");
+            return;
+        }
+        GameObject content = GameObject.Find("Content");
+        if(content == null){
+            Debug.LogWarning("Couldn't find \"Content\". Skipped adding levelData to buttons. Prehaps the object is disabled.");
+            return;
+        }
+        // Iterate over the content and add button listener to each level
+        foreach(Transform child in content.transform){
+            Transform levelsInHierarchy = FindDeepChild(child, "Levels");
+            string groupName = child.name;
+            foreach(Transform level in levelsInHierarchy){
+                Button button = level.GetComponentInChildren<Button>();
+                string levelDataPath = levelDataResourcePath + groupName + "/" + level.GetSiblingIndex();
+                LevelData levelData = Resources.Load<LevelData>(levelDataPath);
+                if(levelData == null){
+                    Debug.LogWarning(string.Format("Couldn't load LevelData at {0}", levelDataPath));
+                }
+                int numListeners = button.onClick.GetPersistentEventCount();
+
+                // Remove all listeners just in case some extras got added
+                for(int i = 0; i < numListeners; i++){
+                    UnityEventTools.RemovePersistentListener(button.onClick, button.onClick.GetPersistentEventCount() - 1);
+                }
+
+                // Add new listener with correct levelData
+                UnityEventTools.AddObjectPersistentListener<LevelData>(button.onClick, levelSelectAction, levelData);
+                
+                // Required because we're modifing a prefab in the heirarchy
+                PrefabUtility.RecordPrefabInstancePropertyModifications(button);
+            }
+        }
     }
 
     public Transform FindDeepChild(Transform parentTransform, string childName){
@@ -194,6 +239,9 @@ public class CreateLevelData : EditorWindow
         }
         if(GUILayout.Button("Refresh Prefabs")){
             RefreshLevelSelectPrefabs();
+        }
+        if(GUILayout.Button("Refresh Listeners")){
+            RefreshListeners();
         }
     }
 }
