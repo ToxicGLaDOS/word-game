@@ -1114,6 +1114,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   imagePadding: 41
+  scrambleSpeed: 1
   letterPrefab: {fileID: 1369309782975269078, guid: ffb72a2db7538d048aec8066a46b6470,
     type: 3}
   inputSequence: []

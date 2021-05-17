@@ -20,6 +20,19 @@ public class InputLetter : MonoBehaviour, IPointerDownHandler, IPointerEnterHand
         
     }
 
+    public void StopMoving(){
+        StopAllCoroutines();
+    }
+
+    public IEnumerator MoveTo(Vector2 startingPosition, Vector2 endingPosition, float speed){
+        float time = 0;
+        while(time < 1){
+            transform.localPosition = Vector2.Lerp(startingPosition, endingPosition, time);
+            time += speed * Time.deltaTime;
+            yield return null;
+        }
+    }
+
     // Called by InputPanel when a letter is selected
     public void SelectLetter(){
         selectedCircle.gameObject.SetActive(true);

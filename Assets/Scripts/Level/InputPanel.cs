@@ -11,6 +11,8 @@ public class InputPanel : MonoBehaviour
     // This is the amount of padding the image has between
     // the true edge of the image and where the letters should be placed
     public float imagePadding;
+    [Range(0, 1)]
+    public float scrambleSpeed;
     public GameObject letterPrefab;
     ReadOnlyCollection<char> letters; // Read only because Constaint should handle mutation
     bool inputStarted = false; // Wether we are currently inputting a sequence of letters
@@ -18,6 +20,14 @@ public class InputPanel : MonoBehaviour
     public Transform inputLetters;
     UILineRenderer uiLineRenderer;
     LevelView levelView;
+    List<Vector2> inputLetterStartingPositions = new List<Vector2>();
+    List<Vector2> inputLetterTargetPositions = new List<Vector2>();
+
+    private float Radius{
+        get {
+            return GetComponent<RectTransform>().rect.width / 2 - imagePadding;
+        }
+    }
 
     public string InputWord{
         get {
@@ -61,10 +71,21 @@ public class InputPanel : MonoBehaviour
     }
 
     void PositionLetters(){
-        float radius = GetComponent<RectTransform>().rect.width / 2 - imagePadding;
-        // We need to count only the active children because
-        // when initalizing another level the old children won't be destroyed yet
-        // so we use the activeness to decided whether they're new or old
+        // The index of the current child counting only active children
+        int childIndex = 0;
+        foreach(Transform childTransform in inputLetters){
+            // We need to count only the active children because
+            // when initalizing another level the old children won't be destroyed yet
+            // so we use the activeness to decided whether they're new or old
+            if (childTransform.gameObject.activeInHierarchy){
+                Vector2 position = GetPosition(childIndex);
+                childTransform.localPosition = position;
+                childIndex++;
+            }
+        }
+    }
+
+    int NumActiveChildren(){
         int activeChildCount = 0;
         foreach(Transform child in inputLetters){
             if (child.gameObject.activeInHierarchy){
@@ -72,41 +93,47 @@ public class InputPanel : MonoBehaviour
             }
         }
 
-        float theta = 0;
-        float thetaDelta = 2 * Mathf.PI / activeChildCount;
-        foreach(Transform childTransform in inputLetters){
-            if (childTransform.gameObject.activeInHierarchy){
-                childTransform.localPosition = Vector2.zero;
-                float x = radius * Mathf.Cos(theta);
-                float y = radius * Mathf.Sin(theta);
-                childTransform.localPosition = new Vector2(x, y);
-                theta += thetaDelta;
-            }
-        }
+        return activeChildCount;
     }
 
-    // When called the letters in the array have already been scrambled
-    // so we just have to move them to the right place
+    Vector2 GetPosition(int index){
+        int activeChildCount = NumActiveChildren();
+        float theta = 2 * Mathf.PI / activeChildCount * index;
+        float x = Radius * Mathf.Cos(theta);
+        float y = Radius * Mathf.Sin(theta);
+
+        return new Vector2(x, y);
+    }
+
+    // This function doesn't make any attempt to keep the
+    // letters aligned with the order in the "letters" list
     public void Scramble(){
-        // TODO: Consider catching the possible exception
-        for(int i = 0; i < transform.childCount; i++){
-            string letter = letters[i].ToString();
-            Transform child = FindChildWithLetter(i, letter);
-            child.SetSiblingIndex(i);
+        // This works for now, but if we end up using more coroutines
+        // in InputPanel than it will stop those too and that's probably
+        // not what we want
+        StopAllCoroutines();
+        List<Transform> children = new List<Transform>();
+        List<Vector2> targetPositions = new List<Vector2>();
+        foreach(Transform child in inputLetters){
+            children.Add(child);
         }
-        PositionLetters();
-    }
-
-    Transform FindChildWithLetter(int start, string letter){
-        for(int i = start; i < transform.childCount; i++){
-            Transform child = transform.GetChild(i);
-
-            Text text = child.GetComponent<Text>();
-            if(text.text == letter){
-                return child;
-            }
+        for(int i = 0; i < children.Count; i++){
+            targetPositions.Add(GetPosition(i));
         }
-        throw new System.Exception(string.Format("Couldn't find child with letter {0}", letter));
+        for(int i = 0; i < children.Count; i++){
+            Transform child = inputLetters.GetChild(i);
+            Vector2 start = child.localPosition;
+
+            // Pick random target position
+            int index = Random.Range(0, targetPositions.Count);
+            Vector2 target = targetPositions[index];
+
+            // Pop from list
+            targetPositions.RemoveAt(index);
+
+            // Start the MoveTo Coroutine
+            StartCoroutine(child.GetComponent<InputLetter>().MoveTo(start, target, scrambleSpeed));
+        }
     }
 
     // Called when a letter is clicked
