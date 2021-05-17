@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class WordHandler : MonoBehaviour
 {
+    [Range(0, .5f)]
+    public float timeBetweenLetterReveals;
     List<LetterHandler> letters = new List<LetterHandler>();
     public void Initalize(){
         foreach (Transform child in transform){
@@ -12,8 +14,9 @@ public class WordHandler : MonoBehaviour
     }
 
     public void Reveal(){
-        foreach (LetterHandler letter in letters){
-            letter.Reveal();
+        for(int i = 0; i < letters.Count; i++){
+            LetterHandler letter = letters[i];
+            LeanTween.delayedCall(timeBetweenLetterReveals * i, letter.Reveal);
         }
     }
 }
