@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9636d663b9ab2c247b595d90a2ec92d9, type: 3}
   m_Name: 0
   m_EditorClassIdentifier: 
-  word: fate
-  regexDefinition: ^f.*t.*$
+  word: desire
+  regexDefinition: ^.*s.*r.*$
   groupData: {fileID: 11400000, guid: 7e2682b6e5396d846b2ec3bae9ec1555, type: 2}

@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9636d663b9ab2c247b595d90a2ec92d9, type: 3}
   m_Name: 15
   m_EditorClassIdentifier: 
-  word: viii
-  regexDefinition: ^.*ii.*$
+  word: lift
+  regexDefinition: ^.*i.*t$
   groupData: {fileID: 11400000, guid: 7d2369266dc41854e8ad21f44862c972, type: 2}
