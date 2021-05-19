@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEditor;
-using UnityEditor.Events;
+
 public class InputLetter : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
 {
     InputPanel inputPanel;
