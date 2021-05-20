@@ -74,4 +74,10 @@ public class LevelView : MonoBehaviour
         successText.gameObject.SetActive(true);
         nextLevelButton.gameObject.SetActive(true);
     }
+
+    public void AnimateUI(){
+        wordPanelHandler.GetComponent<ScaleInTween>().Tween();
+        inputPanel.GetComponent<ScaleInTween>().Tween();
+    }
+
 }
