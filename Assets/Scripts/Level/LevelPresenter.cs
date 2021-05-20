@@ -82,8 +82,15 @@ public class LevelPresenter : MonoBehaviour
             Initalize();
         }
         else{
-            // TODO: Either go to next group or generate level from here
-            Debug.Log("Out of levels.");
+            GroupData nextGroup = GlobalValues.levelData.groupData.next;
+            if(nextGroup != null){
+                GlobalValues.levelData = Resources.Load<LevelData>(string.Format("LevelData/{0}/0", nextGroup.name));
+                Initalize();
+            }
+            else{
+                // TODO: Generate level from here
+                Debug.Log("Out of levels.");
+            }
         }
     }
 

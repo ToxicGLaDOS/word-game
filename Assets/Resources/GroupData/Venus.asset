@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   panelSprite: {fileID: 21300000, guid: 41bf0255a5195014fabeefb21f722b63, type: 3}
   textColor: {r: 0.25872195, g: 0.7632406, b: 0.9622642, a: 1}
+  next: {fileID: 11400000, guid: 7e2682b6e5396d846b2ec3bae9ec1555, type: 2}
