@@ -15,6 +15,9 @@ public class CreateLevelData : EditorWindow
     int numLetters;
     int minValid = 3;
     int maxValid = 40;
+    int setLetters = 0;
+    bool startWithFirstLetter = false;
+    bool endWithLastLetter = false;
     int folderNameIndex;
     List<string> folderNames = new List<string>();
     Level level;
@@ -44,7 +47,8 @@ public class CreateLevelData : EditorWindow
         }
         string folderName = folderNames[folderNameIndex];
         LevelData levelData = ScriptableObject.CreateInstance<LevelData>();
-        bool success = level.InitalizeFromCriteria(numLetters, minValid, maxValid);
+        RegexBuilderOptions regexOptions = new RegexBuilderOptions(setLetters, startWithFirstLetter, endWithLastLetter);
+        bool success = level.InitalizeFromCriteria(numLetters, minValid, maxValid, regexOptions);
         if(!success){
             Debug.Log("Failed to find word with those critera.");
             return;
@@ -221,6 +225,7 @@ public class CreateLevelData : EditorWindow
     }
 
     void OnGUI(){
+        EditorGUIUtility.labelWidth = 200;
         GUILayout.Label("Level Settings", EditorStyles.boldLabel);
         float fLetters = numLetters;
         numLetters = (int)EditorGUILayout.Slider("Num Letters", fLetters, 3, 10);
@@ -231,6 +236,10 @@ public class CreateLevelData : EditorWindow
         EditorGUILayout.MinMaxSlider(ref fmin, ref fmax, 3, 40);
         minValid = (int)fmin;
         maxValid = (int)fmax;
+        setLetters = EditorGUILayout.IntField("Num set letters in regex", setLetters);
+        startWithFirstLetter = EditorGUILayout.Toggle("Start regex with first letter of word", startWithFirstLetter);
+        endWithLastLetter = EditorGUILayout.Toggle("End regex with last letter of word", endWithLastLetter);
+
         folderNameIndex = EditorGUILayout.Popup("Folder Name", folderNameIndex, folderNames.ToArray(), EditorStyles.popup);
 
         if(GUILayout.Button("Create")){

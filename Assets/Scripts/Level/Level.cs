@@ -31,7 +31,7 @@ public class Level
         correctWords = new List<string>();
         while(true){
             string word = dictionary.RandomWord(7);
-            string regex = GetRegex(word);
+            string regex = RegexBuilder.GetRegex(word, new RegexBuilderOptions(2));
             List<char> listWord = new List<char>(word.ToCharArray());
             constraint = new Constraint(regex, listWord);
             correctWords = dictionary.GetMatchingConstraint(constraint);
@@ -51,23 +51,13 @@ public class Level
         correctWords = dictionary.GetMatchingConstraint(constraint);
     }
 
-    public void InitalizeFromCriteria(int level, int numLetters){
-        foundWords = new List<string>();
-        correctWords = new List<string>();
-        string word = dictionary.RandomWord(numLetters, level);
-        string regex = GetRegex(word);
-        List<char> listWord = new List<char>(word.ToCharArray());
-        constraint = new Constraint(regex, listWord);
-        correctWords = dictionary.GetMatchingConstraint(constraint);
-    }
-
-    public bool InitalizeFromCriteria(int numLetters, int minValid, int maxValid){
+    public bool InitalizeFromCriteria(int numLetters, int minValid, int maxValid, RegexBuilderOptions regexOptions){
         foundWords = new List<string>();
         correctWords = new List<string>();
         int attempts = 0;
         while(true){
             string word = dictionary.RandomWord(numLetters);
-            string regex = GetRegex(word);
+            string regex = RegexBuilder.GetRegex(word, regexOptions);
             List<char> listWord = new List<char>(word.ToCharArray());
             constraint = new Constraint(regex, listWord);
             correctWords = dictionary.GetMatchingConstraint(constraint);
@@ -81,39 +71,6 @@ public class Level
             attempts++;
         }
         return true;
-    }
-
-    public void InitalizeSpecific(string word){
-        foundWords = new List<string>();
-        correctWords = new List<string>();
-        string regex = GetRegex(word);
-        List<char> listWord = new List<char>(word.ToCharArray());
-        constraint = new Constraint(regex, listWord);
-        correctWords = dictionary.GetMatchingConstraint(constraint);
-    }
-
-    string GetRegex(string word){
-        string regex = "^";
-        int length = word.Length;
-        int firstBound = length/2;
-        int secondBound = length;
-
-        int firstIndex = Random.Range(0, firstBound);
-        int secondIndex = Random.Range(firstBound, secondBound);
-
-        if(firstIndex > 0){
-            regex += ".*";
-        }
-        regex += word[firstIndex];
-        if(secondIndex > firstIndex + 1){
-            regex += ".*";
-        }
-        regex += word[secondIndex];
-        if(secondIndex < length - 1){
-            regex += ".*"; // This could be optional
-        }
-        regex += "$";
-        return regex;
     }
 
     public bool FoundAllWords(){
