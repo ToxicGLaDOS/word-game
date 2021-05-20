@@ -33,7 +33,7 @@ public class CreateLevelData : EditorWindow
         EditorWindow.GetWindow(typeof(CreateLevelData));
     }
 
-    void Awake(){
+    void CreateGUI(){
         level = new Level(GlobalValues.dictionaryPath);
         GroupData[] groupDataArray = Resources.LoadAll<GroupData>(groupDataResourcePath);
         foreach(GroupData groupData in groupDataArray){
