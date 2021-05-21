@@ -12,10 +12,14 @@ public class ScaleTween : MonoBehaviour
     public UnityEvent onStartCallback;
     public UnityEvent onCompleteCallback;
     public GameObject target;
-    public bool activate;
+    public bool stopOtherTweens = true;
+
     public void Tween(){
         if(onStartCallback != null){
             onStartCallback.Invoke();
+        }
+        if(stopOtherTweens){
+            LeanTween.cancel(target);
         }
         LeanTween.scale(target, targetScale, duration).setEase(easeType).setOnComplete(OnComplete);
     }
