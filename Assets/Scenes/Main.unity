@@ -307,7 +307,6 @@ MonoBehaviour:
     type: 3}
   letterPrefab: {fileID: 66823316416895123, guid: 303e126e91e03dc44b2c7ab0b6769805,
     type: 3}
-  maxColumnSize: 5
 --- !u!114 &264604814
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -317,26 +316,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 264604811}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 26314cdb9b9409b418246c120e111442, type: 3}
+  m_Script: {fileID: 11500000, guid: 10cb1ea4e1e9c794b9138b069ebea073, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startScale: {x: 0, y: 0, z: 0}
-  duration: 0.5
-  easeType: 16
-  onCompleteCallback:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 299633394}
-        m_MethodName: Tween
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 0
 --- !u!1 &277841357
 GameObject:
   m_ObjectHideFlags: 0
@@ -1315,8 +1303,6 @@ MonoBehaviour:
       m_Calls: []
   target: {fileID: 1120413511}
   stopOtherTweens: 1
-  allowDuplicates: 0
-  tweenID: 0
 --- !u!114 &1120413514
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1585,7 +1571,7 @@ PrefabInstance:
     - target: {fileID: 4202472250361753875, guid: cd6b074193afbef41b35d2e2bd3d8e19,
         type: 3}
       propertyPath: m_Pivot.y
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 4202472250361753875, guid: cd6b074193afbef41b35d2e2bd3d8e19,
         type: 3}
@@ -1595,7 +1581,7 @@ PrefabInstance:
     - target: {fileID: 4202472250361753875, guid: cd6b074193afbef41b35d2e2bd3d8e19,
         type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4202472250361753875, guid: cd6b074193afbef41b35d2e2bd3d8e19,
         type: 3}
@@ -1605,12 +1591,12 @@ PrefabInstance:
     - target: {fileID: 4202472250361753875, guid: cd6b074193afbef41b35d2e2bd3d8e19,
         type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4202472250361753875, guid: cd6b074193afbef41b35d2e2bd3d8e19,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4202472250361753875, guid: cd6b074193afbef41b35d2e2bd3d8e19,
         type: 3}
@@ -1665,7 +1651,7 @@ PrefabInstance:
     - target: {fileID: 4202472250361753875, guid: cd6b074193afbef41b35d2e2bd3d8e19,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -138.83997
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4202472250361753875, guid: cd6b074193afbef41b35d2e2bd3d8e19,
         type: 3}
@@ -1682,12 +1668,29 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4700372055535650312, guid: cd6b074193afbef41b35d2e2bd3d8e19,
+        type: 3}
+      propertyPath: m_StartAxis
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4700372055535650312, guid: cd6b074193afbef41b35d2e2bd3d8e19,
+        type: 3}
+      propertyPath: m_ChildAlignment
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4700372055535650312, guid: cd6b074193afbef41b35d2e2bd3d8e19,
+        type: 3}
+      propertyPath: ChildForceExpandWidth
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5104922147031299180, guid: cd6b074193afbef41b35d2e2bd3d8e19,
         type: 3}
       propertyPath: m_ChildControlHeight
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 0}
+    - {fileID: 4700372055535650312, guid: cd6b074193afbef41b35d2e2bd3d8e19, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: cd6b074193afbef41b35d2e2bd3d8e19, type: 3}
 --- !u!1 &1521501254
 GameObject:
@@ -2133,8 +2136,6 @@ MonoBehaviour:
         m_CallState: 2
   target: {fileID: 1120413511}
   stopOtherTweens: 1
-  allowDuplicates: 0
-  tweenID: 0
 --- !u!1 &1758892631
 GameObject:
   m_ObjectHideFlags: 0

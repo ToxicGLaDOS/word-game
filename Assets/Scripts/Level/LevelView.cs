@@ -76,7 +76,7 @@ public class LevelView : MonoBehaviour
     }
 
     public void AnimateUI(){
-        wordPanelHandler.GetComponent<ScaleInTween>().Tween();
+        //wordPanelHandler.GetComponent<ScaleInTween>().Tween();
         inputPanel.GetComponent<ScaleInTween>().Tween();
     }
 
