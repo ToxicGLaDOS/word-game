@@ -32,8 +32,8 @@ namespace UnityEngine.UI.Extensions
 
 		public override void CalculateLayoutInputHorizontal()
 		{
+			base.CalculateLayoutInputHorizontal ();
 			if (startAxis == Axis.Horizontal) {
-				base.CalculateLayoutInputHorizontal ();
 				var minWidth = GetGreatestMinimumChildWidth () + padding.left + padding.right;
 				SetLayoutInputForAxis (minWidth, -1, -1, 0);
 			} else {
@@ -57,7 +57,6 @@ namespace UnityEngine.UI.Extensions
 			if (startAxis == Axis.Horizontal) {
 				_layoutHeight = SetLayout (1, true);
 			} else {
-				base.CalculateLayoutInputHorizontal ();
 				var minHeight = GetGreatestMinimumChildHeigth () + padding.bottom + padding.top;
 				SetLayoutInputForAxis (minHeight, -1, -1, 1);
 			}
