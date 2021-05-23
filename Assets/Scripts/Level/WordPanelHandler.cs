@@ -12,13 +12,14 @@ public class WordPanelHandler : MonoBehaviour
     public Dictionary<string, WordHandler> wordMap = new Dictionary<string, WordHandler>();
 
     public void InitalizeWords(List<string> words){
+        Transform wordsTransform = transform.Find("Words");
         // Make sure the word panel is empty so it can be inialized properly
-        foreach(Transform child in transform){
+        foreach(Transform child in wordsTransform){
             Destroy(child.gameObject);
         }
         wordMap.Clear();
         foreach(string word in words){
-            GameObject wordObj = Instantiate(wordPrefab, transform);
+            GameObject wordObj = Instantiate(wordPrefab, wordsTransform);
             wordObj.name = word;
             wordMap.Add(word, wordObj.GetComponent<WordHandler>());
             foreach(char letter in word){
@@ -28,7 +29,7 @@ public class WordPanelHandler : MonoBehaviour
             wordObj.GetComponent<WordHandler>().Initalize();
         }
         List<Transform> children = new List<Transform>();
-        foreach(Transform child in transform){
+        foreach(Transform child in wordsTransform){
             children.Add(child);
         }
         SiblingNameLengthComparer comparer = new SiblingNameLengthComparer();
@@ -36,7 +37,7 @@ public class WordPanelHandler : MonoBehaviour
         for(int i = 0; i < children.Count; i++){
             children[i].SetSiblingIndex(i);
         }
-        LayoutRebuilder.ForceRebuildLayoutImmediate(GetComponent<RectTransform>()); // Fixes weirdness where adding words doesn't update the layout
+        LayoutRebuilder.ForceRebuildLayoutImmediate(wordsTransform.GetComponent<RectTransform>()); // Fixes weirdness where adding words doesn't update the layout
     }
 
     public void RevealWord(string word){

@@ -12,7 +12,7 @@ public class LetterHandler : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        letterText = GetComponentInChildren<Text>();
+        letterText = GetComponentInChildren<Text>(true);
         letterText.gameObject.SetActive(false);
     }
 
