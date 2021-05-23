@@ -110,7 +110,7 @@ namespace UnityEngine.UI.Extensions
 		/// <param name="width">Width to calculate the layout with</param>
 		/// <param name="axis">0 for horizontal axis, 1 for vertical</param>
 		/// <param name="layoutInput">If true, sets the layout input for the axis. If false, sets child position for axis</param>
-		public float SetLayout(int axis, bool layoutInput, float scale = 1.0f)
+		public float SetLayout(int axis, bool layoutInput)
 		{
 			//container height and width
 			var groupHeight = rectTransform.rect.height;
@@ -144,8 +144,8 @@ namespace UnityEngine.UI.Extensions
 					offset = (float)padding.left;
 					counterOffset = (float)padding.right;
 				}
-				spacingBetweenBars = SpacingX * scale;
-				spacingBetweenElements = SpacingY * scale;
+				spacingBetweenBars = SpacingX;
+				spacingBetweenElements = SpacingY;
 			}
 
 			var currentBarSize = 0f;
@@ -190,8 +190,8 @@ namespace UnityEngine.UI.Extensions
 							float newOffset = CalculateRowVerticalOffset (groupSize, offset, currentBarSpace);
 							LayoutRow (_itemList, currentBarSize, currentBarSpace, workingSize, padding.left, newOffset, axis);
 						} else if (startAxis == Axis.Vertical) {
-							float newOffset = CalculateColHorizontalOffset (groupSize, offset, currentBarSpace, scale);
-							LayoutCol (_itemList, currentBarSpace, currentBarSize, workingSize, newOffset, padding.top, axis, scale);
+							float newOffset = CalculateColHorizontalOffset (groupSize, offset, currentBarSpace);
+							LayoutCol (_itemList, currentBarSpace, currentBarSize, workingSize, newOffset, padding.top, axis);
 						}
 					}
 
@@ -229,19 +229,14 @@ namespace UnityEngine.UI.Extensions
 					currentBarSize -= spacingBetweenElements;
 					LayoutRow (_itemList, currentBarSize, currentBarSpace, workingSize - (ChildForceExpandWidth ? 0 : spacingBetweenElements), padding.left, newOffset, axis);
 				}else if (startAxis == Axis.Vertical) {
-					float newOffset = CalculateColHorizontalOffset(groupWidth, offset, currentBarSpace, scale);
+					float newOffset = CalculateColHorizontalOffset(groupWidth, offset, currentBarSpace);
 					currentBarSize -= spacingBetweenElements;
-					LayoutCol(_itemList, currentBarSpace, currentBarSize, workingSize - (ChildForceExpandHeight ? 0 : spacingBetweenElements), newOffset, padding.top, axis, scale);
+					LayoutCol(_itemList, currentBarSpace, currentBarSize, workingSize - (ChildForceExpandHeight ? 0 : spacingBetweenElements), newOffset, padding.top, axis);
 				}
 			}
 
 			_itemList.Clear();
-			float lastOffset = CalculateColHorizontalOffset(groupWidth, offset, currentBarSpace, scale);
-			bool oob = false;
-			float oobRatio = groupWidth / (lastOffset + currentBarSpace);
-			if(lastOffset + currentBarSpace > groupWidth){
-				oob = true;
-			}
+
 			// Add the last bar space to the barSpace accumulator
 			offset += currentBarSpace;
 			offset += counterOffset;
@@ -249,12 +244,7 @@ namespace UnityEngine.UI.Extensions
 			if (layoutInput) {
 				SetLayoutInputForAxis(offset, offset, -1, axis);
 			}
-			
-			if(oob && scale == 1){
-				print(string.Format("setting scale {0}", oobRatio));
-				return SetLayout(axis, layoutInput, oobRatio);
-			}
-			return offset * scale;
+			return offset;
 		}
 
 		private float CalculateRowVerticalOffset(float groupHeight, float yOffset, float currentRowHeight)
@@ -268,7 +258,7 @@ namespace UnityEngine.UI.Extensions
 			}
 		}
 
-		private float CalculateColHorizontalOffset(float groupWidth, float xOffset, float currentColWidth, float scale = 1)
+		private float CalculateColHorizontalOffset(float groupWidth, float xOffset, float currentColWidth)
 		{
 			if (IsRightAlign) {
 				return groupWidth - xOffset - currentColWidth;
@@ -345,7 +335,7 @@ namespace UnityEngine.UI.Extensions
 			}
 		}
 
-		protected void LayoutCol(IList<RectTransform> contents, float colWidth, float colHeight, float maxHeight, float xOffset, float yOffset, int axis, float scale = 1)
+		protected void LayoutCol(IList<RectTransform> contents, float colWidth, float colHeight, float maxHeight, float xOffset, float yOffset, int axis)
 		{
 			var yPos = yOffset;
 
@@ -399,13 +389,11 @@ namespace UnityEngine.UI.Extensions
 				if (ExpandHorizontalSpacing && j > 0) {
 					yPos += extraSpacing;
 				}
-				print(string.Format("Using scale {0}", scale));
+
 				if (axis == 0) {
-					SetChildAlongAxis (rowChild, 0, xPos * scale, rowChildWidth);
-					rowChild.localScale = new Vector2(scale, scale);
+					SetChildAlongAxis (rowChild, 0, xPos, rowChildWidth);
 				} else {
-					SetChildAlongAxis (rowChild, 1, yPos * scale, rowChildHeight);
-					rowChild.localScale = new Vector2(scale, scale);
+					SetChildAlongAxis (rowChild, 1, yPos, rowChildHeight);
 				}
 
 				// Don't do vertical spacing for the last one
