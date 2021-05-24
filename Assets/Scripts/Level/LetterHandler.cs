@@ -17,7 +17,9 @@ public class LetterHandler : MonoBehaviour
     }
 
     public void Reveal(){
-        letterText.gameObject.SetActive(true);
-        LeanTween.scale(gameObject, revealScaleFactor, scaleTime).setLoopPingPong(1);
+        if(letterText != null){
+            letterText.gameObject.SetActive(true);
+            LeanTween.scale(gameObject, revealScaleFactor, scaleTime).setLoopPingPong(1);
+        }
     }
 }
