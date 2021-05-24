@@ -35,6 +35,7 @@ public class WordPanelHandler : MonoBehaviour
         for(int i = 0; i < children.Count; i++){
             children[i].SetSiblingIndex(i);
         }
+        LayoutRebuilder.ForceRebuildLayoutImmediate(wordsTransform.GetComponent<RectTransform>()); // Fixes weirdness where adding words doesn't update the layout
         LayoutRebuilder.ForceRebuildLayoutImmediate(GetComponent<RectTransform>()); // Fixes weirdness where adding words doesn't update the layout
     }
 
