@@ -2,20 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.UI.Extensions;
 
+// Scales the childRectTransform to fit within this RectTransform
 public class WordPanelScaler : MonoBehaviour, ILayoutSelfController
 {
+    [Tooltip("The maximum amount to scale up to")]
     public float maxScale = 1.5f;
+
+    [Tooltip("How much to scale by each iteration. Closer to 1 will result in more computation but better results")]
+    [Range(0, 1)]
+    public float scaleFactor = 0.99f;
+
+    [Tooltip("The child's rect transform that we are controlling")]
     public RectTransform childRectTransform;
     RectTransform rectTransform;
-    public LayoutGroup layoutGroup;
-    float scaleFactor = 0.99f;
-    public bool scale = false;
-    // Keep track of the size for which the current scale and rect are valid
-    // Prevents us from trying to ScaleUp every frame when we're good
-    public Vector2 validForSize;
-    public float validForWidth;
+    LayoutGroup layoutGroup;
     
     void Start(){
         SetupReferences();
@@ -23,8 +24,11 @@ public class WordPanelScaler : MonoBehaviour, ILayoutSelfController
 
     void SetupReferences(){
         rectTransform = GetComponent<RectTransform>();
+        layoutGroup = childRectTransform.GetComponent<LayoutGroup>();
     }
 
+    // At least for my applications, ScaleDown seems to never be able to produce an infinite loop
+    // There might be some edge case LayoutGroups that _could_, but this is good enough for me
     void ScaleDown(){
         while(layoutGroup.minWidth > childRectTransform.rect.size.x){
             childRectTransform.localScale *= scaleFactor;
@@ -36,11 +40,13 @@ public class WordPanelScaler : MonoBehaviour, ILayoutSelfController
     }
 
     void ScaleUp(){
-
         Vector2 startScale = childRectTransform.localScale;
         while(layoutGroup.minWidth < childRectTransform.rect.size.x && childRectTransform.localScale.x < maxScale){
             startScale = childRectTransform.localScale;
-            childRectTransform.localScale *=  1 + (1 - scaleFactor);
+            float newScaleX = Mathf.Min(childRectTransform.localScale.x * 1 + (1 - scaleFactor), maxScale);
+            float newScaleY = Mathf.Min(childRectTransform.localScale.y * 1 + (1 - scaleFactor), maxScale);
+
+            childRectTransform.localScale =  new Vector2(newScaleX, newScaleY);
             FitToParent();
             
             // We have to rebuild the layout because the FlowLayout might move stuff around as we scale
@@ -51,8 +57,6 @@ public class WordPanelScaler : MonoBehaviour, ILayoutSelfController
         if(layoutGroup.minWidth > childRectTransform.rect.size.x){
             childRectTransform.localScale = startScale;
             FitToParent();
-            validForSize = childRectTransform.rect.size;
-            validForWidth = layoutGroup.minWidth;
         }
     }
 
@@ -65,24 +69,19 @@ public class WordPanelScaler : MonoBehaviour, ILayoutSelfController
         childRectTransform.sizeDelta = delta;
     }
 
-    void Update(){
-        //FindBestScale();
-    }
-
     void FindBestScale(){
-        
-        // If either childRectTransform.rect.size or layoutGroup.minWidth change than we need to re-layout
-        bool alreadyValidated = childRectTransform.rect.size == validForSize && layoutGroup.minWidth == validForWidth;
-        
-        if(!alreadyValidated){
-            LayoutRebuilder.ForceRebuildLayoutImmediate(childRectTransform);
+        // It's unclear whether this line is neccesarry or not. It seems to be needed if Update is driving
+        // but when SetLayout is driving it might already have been called :shrug:
+        // Leaving this comment just in case I see some weirdness
+        //LayoutRebuilder.ForceRebuildLayoutImmediate(childRectTransform);
+        if(layoutGroup.minWidth > childRectTransform.rect.size.x){
+            ScaleDown();
+        }
+        else if(layoutGroup.minWidth < childRectTransform.rect.size.x && childRectTransform.localScale.x < maxScale){                    
+            ScaleUp();
+        }
+        else{
             FitToParent();
-            if(layoutGroup.minWidth > childRectTransform.rect.size.x){
-                ScaleDown();
-            }
-            else if(layoutGroup.minWidth < childRectTransform.rect.size.x && childRectTransform.localScale.x < maxScale){                    
-                ScaleUp();
-            }
         }
     }
 
@@ -91,18 +90,15 @@ public class WordPanelScaler : MonoBehaviour, ILayoutSelfController
     }
 
     public void SetLayoutVertical(){
+        // We do everything in SetLayoutHorizontal
+        //
+        // If didn't want to scale evenly between x and y then
+        // it might make sense to scale x and y seperatly and use this
+        // function, but that's not what i'm using this for
     }
 
     // We have to set up the references here so that it works in the editor
     void OnValidate(){
         SetupReferences();
-    }
-}
-
-public static class Vector3Ext
-{
-    public static string Log(this Vector3 v)
-    {
-        return v.x + " " + v.y + " " + v.z;
     }
 }

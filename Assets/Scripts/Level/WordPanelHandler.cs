@@ -1,13 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
 using UnityEngine.UI;
-using UnityEngine.UI.Extensions;
 
 public class WordPanelHandler : MonoBehaviour
 {
-    public GameObject columnPrefab, wordPrefab, letterPrefab;
+    public GameObject wordPrefab, letterPrefab;
 
     public Dictionary<string, WordHandler> wordMap = new Dictionary<string, WordHandler>();
 
@@ -37,7 +35,7 @@ public class WordPanelHandler : MonoBehaviour
         for(int i = 0; i < children.Count; i++){
             children[i].SetSiblingIndex(i);
         }
-        LayoutRebuilder.ForceRebuildLayoutImmediate(wordsTransform.GetComponent<RectTransform>()); // Fixes weirdness where adding words doesn't update the layout
+        LayoutRebuilder.ForceRebuildLayoutImmediate(GetComponent<RectTransform>()); // Fixes weirdness where adding words doesn't update the layout
     }
 
     public void RevealWord(string word){
@@ -58,8 +56,3 @@ public class SiblingNameLengthComparer : IComparer<Transform> {
         }
     }
 }
-   
-       
-       
-       
-       
