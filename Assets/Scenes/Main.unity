@@ -307,6 +307,21 @@ MonoBehaviour:
     type: 3}
   letterPrefab: {fileID: 66823316416895123, guid: 303e126e91e03dc44b2c7ab0b6769805,
     type: 3}
+--- !u!114 &264604814
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 264604811}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68df76dc07f4a5d44807de721010ebe4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxScale: 1.5
+  childRectTransform: {fileID: 2110014225}
+  layoutGroup: {fileID: 2110014226}
 --- !u!1 &277841357
 GameObject:
   m_ObjectHideFlags: 0
@@ -2454,7 +2469,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2110014225}
   - component: {fileID: 2110014226}
-  - component: {fileID: 2110014227}
   m_Layer: 5
   m_Name: Words
   m_TagString: Untagged
@@ -2506,18 +2520,6 @@ MonoBehaviour:
   ChildForceExpandHeight: 0
   invertOrder: 0
   m_StartAxis: 1
---- !u!114 &2110014227
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2110014224}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68df76dc07f4a5d44807de721010ebe4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2113703989
 GameObject:
   m_ObjectHideFlags: 0
