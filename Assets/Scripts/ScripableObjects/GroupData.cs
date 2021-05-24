@@ -9,5 +9,6 @@ public class GroupData : ScriptableObject
     public Sprite panelSprite;
     public Color textColor;
     public GroupData next;
+    public int index;
 
 }

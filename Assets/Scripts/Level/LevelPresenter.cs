@@ -78,13 +78,34 @@ public class LevelPresenter : MonoBehaviour
     public void GotoNextLevel(){
         int nextLevelIndex = int.Parse(GlobalValues.levelData.name) + 1;
         LevelData nextLevelData = Resources.Load<LevelData>(string.Format("LevelData/{0}/{1}", GlobalValues.levelData.groupData.name, nextLevelIndex.ToString()));
+        
         if(nextLevelData != null){
+            int playersCurrentGroup = PlayerPrefs.GetInt("CurrentGroup", 0);
+            int playersCurrentLevel = PlayerPrefs.GetInt("CurrentLevel", 0);
+            // If we completed a level from the last group the player has unlocked
+            // and the level is the last level the player has unlocked
+            // then unlock the next level
+            if(playersCurrentGroup == nextLevelData.groupData.index && playersCurrentLevel + 1 == nextLevelIndex){
+                int currentLevel = PlayerPrefs.GetInt("CurrentLevel", 0);
+                PlayerPrefs.SetInt("CurrentLevel", currentLevel + 1);
+            }
             GlobalValues.levelData = nextLevelData;
             Initalize();
         }
         else{
             GroupData nextGroup = GlobalValues.levelData.groupData.next;
             if(nextGroup != null){
+                int playersCurrentGroup = PlayerPrefs.GetInt("CurrentGroup", 0);
+                // If the the next group is further than the player has gotten
+                // then unlock the next group and set the leve back to 0
+                if(nextGroup.index == playersCurrentGroup + 1){
+                    PlayerPrefs.SetInt("CurrentGroup", nextGroup.index);
+                    PlayerPrefs.SetInt("CurrentLevel", 0); // Reset back to level 0 for next group
+                }
+                else if(nextGroup.index > playersCurrentGroup + 1){
+                    Debug.LogError(string.Format("Tried to load a group further than the next one. GroupData index might be incorrect. Culprits were nextGroup = {0} and playersCurrentGroup = {1}", nextGroup, playersCurrentGroup));
+                }
+
                 GlobalValues.levelData = Resources.Load<LevelData>(string.Format("LevelData/{0}/0", nextGroup.name));
                 Initalize();
             }

@@ -15,3 +15,4 @@ MonoBehaviour:
   panelSprite: {fileID: 21300000, guid: bc29d5277c53d4b468ca3b1b403fbf20, type: 3}
   textColor: {r: 1, g: 0, b: 0, a: 1}
   next: {fileID: 11400000, guid: 86924aa61f4c0eb4883c0006206f367b, type: 2}
+  index: 2
