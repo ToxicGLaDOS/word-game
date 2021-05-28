@@ -23,6 +23,12 @@ public class InputPanel : MonoBehaviour
     List<Vector2> inputLetterStartingPositions = new List<Vector2>();
     List<Vector2> inputLetterTargetPositions = new List<Vector2>();
 
+    protected bool InputStarted {
+        get {
+            return inputStarted;
+        }
+    }
+
     private float Radius{
         get {
             return GetComponent<RectTransform>().rect.width / 2 - imagePadding;
@@ -40,13 +46,13 @@ public class InputPanel : MonoBehaviour
     }
 
     // Start is called before the first frame update
-    void Start()
+    virtual protected void Start()
     {
         uiLineRenderer = GetComponentInChildren<UILineRenderer>();
         levelView = FindObjectOfType<LevelView>();
     }
 
-    public void Initalize(List<char> letters){
+    virtual public void Initalize(List<char> letters){
         // Delete all children
         // If this is called after the input panel has been initalized
         // than we want to get rid of the old characters
@@ -167,23 +173,38 @@ public class InputPanel : MonoBehaviour
                 // points.Count - 1
                 points.Insert(points.Count - 1, newPoint);
                 uiLineRenderer.Points = points.ToArray();
+
+                SetLineRendererMousePoint(GetCursorPosition());
             }
         }
     }
 
-    void SubmitWord(){
+    virtual protected void SubmitWord(){
         levelView.SubmitWord();
         EndInput();
     }
 
+    protected void SetLineRendererMousePoint(Vector2 point){
+        uiLineRenderer.Points[uiLineRenderer.Points.Length - 1] = point;
+        uiLineRenderer.SetAllDirty(); // We have to set dirty because setting at an index doesn't do it for us
+    }
+
+    virtual protected Vector3 GetCursorPosition(){
+        Vector3 mousePoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mousePoint = transform.InverseTransformPoint(mousePoint);
+        return mousePoint;
+    }
+
+    virtual protected bool CursorReleased(){
+        return Input.GetMouseButtonUp(0);
+    }
+
     void Update(){
         if(inputStarted){
-            Vector3 mousePoint = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            mousePoint = transform.InverseTransformPoint(mousePoint);
+            Vector3 mousePoint = GetCursorPosition();
 
-            uiLineRenderer.Points[uiLineRenderer.Points.Length - 1] = mousePoint;
-            uiLineRenderer.SetAllDirty(); // We have to set dirty because setting at an index doesn't do it for us
-            if(Input.GetMouseButtonUp(0)){
+            SetLineRendererMousePoint(mousePoint);
+            if(CursorReleased()){
                 SubmitWord();
             }
         }
