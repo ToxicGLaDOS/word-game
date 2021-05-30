@@ -161,6 +161,7 @@ GameObject:
   - component: {fileID: 6872886628433487126}
   - component: {fileID: 6872886628433487125}
   - component: {fileID: 6872886628433487124}
+  - component: {fileID: 652325818646788380}
   - component: {fileID: 6872886628433487127}
   m_Layer: 5
   m_Name: Panel
@@ -239,11 +240,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4479b866b53df41469a0ec8a8d16ed24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  imagePadding: 41
+  inputSequence: []
+  inputLetters: {fileID: 6872886628099050831}
+--- !u!114 &652325818646788380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6872886628433487122}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfb3b7164e2605e478ebc5b0740dfd32, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  imagePadding: 436
   scrambleSpeed: 1
   letterPrefab: {fileID: 1369309782975269078, guid: ffb72a2db7538d048aec8066a46b6470,
     type: 3}
-  inputSequence: []
   inputLetters: {fileID: 6872886628099050831}
 --- !u!114 &6872886628433487127
 MonoBehaviour:

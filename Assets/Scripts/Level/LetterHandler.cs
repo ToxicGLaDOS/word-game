@@ -22,4 +22,10 @@ public class LetterHandler : MonoBehaviour
             LeanTween.scale(gameObject, revealScaleFactor, scaleTime).setLoopPingPong(1);
         }
     }
+
+    public void Hide(){
+        if(letterText != null){
+            letterText.gameObject.SetActive(false);
+        }
+    }
 }

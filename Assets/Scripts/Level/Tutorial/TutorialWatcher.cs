@@ -4,19 +4,17 @@ using UnityEngine;
 
 public class TutorialWatcher : MonoBehaviour
 {
-    public GameObject tutorialScreen;
-    // Start is called before the first frame update
-    void Start()
-    {
-        if(PlayerPrefs.GetInt("Tutorial_Intro", 0) == 0){
-            tutorialScreen.SetActive(true);
-            PlayerPrefs.SetInt("Tutorial_Intro", 1);
+    static string FirstPlayKey = "Tutorial0";
+    public void FirstPlay(){
+        if(PlayerPrefs.GetInt(FirstPlayKey, 0) == 0){
+            Transform tutorialIntro = transform.Find("TutorialIntro");
+            tutorialIntro.gameObject.SetActive(true);
+            PlayerPrefs.SetInt(FirstPlayKey, 1);
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    // Start is called before the first frame update
+    void Start()
     {
-        
     }
 }

@@ -17,6 +17,7 @@ public class TutorialInputPanel : InputPanel
         return transform.InverseTransformPoint(cursorRectTransform.position);
     }
 
+    // This function essentially makes SubmitWord public for the tutorial version of InputPanel
     public void EndTutorialSequence(){
         SubmitWord();
     }
@@ -26,11 +27,6 @@ public class TutorialInputPanel : InputPanel
     }
 
     protected override bool CursorReleased(){
-        print(cursor.MouseButtonUp);
-        return cursor.MouseButtonUp;
-    }
-
-    public override void Initalize(List<char> letters){
-        // Shouldn't be called anyway, but for safety we disable it
+        return false;
     }
 }

@@ -19,4 +19,11 @@ public class WordHandler : MonoBehaviour
             LeanTween.delayedCall(timeBetweenLetterReveals * i, letter.Reveal);
         }
     }
+
+    public void Hide(){
+        for(int i = 0; i < letters.Count; i++){
+            LetterHandler letter = letters[i];
+            letter.Hide();
+        }
+    }
 }

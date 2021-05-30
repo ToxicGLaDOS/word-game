@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class LevelView : MonoBehaviour
 {
     public WordPanelHandler wordPanelHandler;
+    public InputPanelLayout inputPanelLayout;
     public InputPanel inputPanel;
     public Text lettersTextbox;
     public Text regexTextbox;
@@ -28,7 +29,7 @@ public class LevelView : MonoBehaviour
     }
 
     public void SetInputLetters(List<char> letters){
-        inputPanel.Initalize(letters);
+        inputPanelLayout.Initalize(letters);
     }
 
     public void ScrambleHandler(){
@@ -36,7 +37,7 @@ public class LevelView : MonoBehaviour
     }
 
     public void ScrambleInput(){
-        inputPanel.Scramble();
+        inputPanelLayout.Scramble();
     }
 
     public void SubmitWord(){
@@ -77,7 +78,7 @@ public class LevelView : MonoBehaviour
 
     public void AnimateUI(){
         wordPanelHandler.GetComponent<ScaleInTween>().Tween();
-        inputPanel.GetComponent<ScaleInTween>().Tween();
+        inputPanelLayout.GetComponent<ScaleInTween>().Tween();
     }
 
 }

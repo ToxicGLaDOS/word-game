@@ -43,8 +43,8 @@ public class InputLetter : MonoBehaviour, IPointerDownHandler, IPointerEnterHand
         selectedCircle.gameObject.SetActive(false);
     }
 
-    // The no argument versions exist so we can assign them in the editor
-    // for tutorial versions of the inputLetter.
+    // The no argument versions of OnPointer{Enter|Down} exist so 
+    // we can assign them in the editor for tutorial versions of the inputLetter.
     public void OnPointerDown(){
         inputPanel.BeginInput();
         inputPanel.LetterSelected(this);
