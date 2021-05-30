@@ -5,17 +5,14 @@ using UnityEngine.UI;
 
 public class LevelView : MonoBehaviour
 {
-    public WordPanelHandler wordPanelHandler;
+    WordPanelHandler wordPanelHandler;
     public InputPanelLayout inputPanelLayout;
     public InputPanel inputPanel;
-    public Text lettersTextbox;
     public Text regexTextbox;
     public Text foundBonusWords;
     public Text messageText;
-    public Text wordsRemainingCounter;
     public Text successText;
     public Button nextLevelButton;
-    public InputField inputField;
     private LevelPresenter levelPresenter;
     // Start is called before the first frame update
     void Start()

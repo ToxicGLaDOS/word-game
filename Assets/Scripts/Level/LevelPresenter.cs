@@ -28,7 +28,6 @@ public class LevelPresenter : MonoBehaviour
         
         string regexText = string.Format("Regex: {0}", regex);
 
-        SetLettersText(letters);
         levelView.SetRegexText(regexText);
         levelView.SetInputLetters(letters);
         levelView.InitalizeWords(level.GetRemainingWords());
@@ -123,12 +122,7 @@ public class LevelPresenter : MonoBehaviour
     }
 
     public void Scramble(){
-        level.ScrambleLetters();
-        SetLettersText(level.Letters);
+        level.ScrambleLetters(); // TODO: Pretty sure this is unnecessary now
         levelView.ScrambleInput();
-    }
-
-    void SetLettersText(List<char> letters){
-        string lettersText = string.Format("Letters: {0}", new string(letters.ToArray()));
     }
 }
