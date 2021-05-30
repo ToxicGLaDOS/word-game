@@ -23,6 +23,7 @@ public class TutorialInputPanel : InputPanel
     }
 
     protected override void SubmitWord(){
+        inputWord.Clear();
         EndInput();
     }
 

@@ -1,5 +1,200 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1660539842250635458
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8622197122047702919}
+  - component: {fileID: 8046495725754056037}
+  - component: {fileID: 5354257199465939471}
+  - component: {fileID: 3640444825526929831}
+  m_Layer: 5
+  m_Name: InputSpoofer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &8622197122047702919
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1660539842250635458}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.44595078, y: 0.44595078, z: 0.44595078}
+  m_Children: []
+  m_Father: {fileID: 7530376875469581620}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 10.482, y: -6.3661}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.10482476, y: 0.93633944}
+--- !u!114 &8046495725754056037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1660539842250635458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea6d1417503342546ae462c4cb0bbf17, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  commands:
+  - destination: {x: 77.1, y: -6.3661}
+    duration: 0.5
+    onComplete:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 0}
+          m_MethodName: OnPointerDown
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - destination: {x: 5.1, y: 73}
+    duration: 0.5
+    onComplete:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 0}
+          m_MethodName: OnPointerEnter
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - destination: {x: -71.5, y: 0.1}
+    duration: 0.5
+    onComplete:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 0}
+          m_MethodName: OnPointerEnter
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - destination: {x: 1.4, y: -76.5}
+    duration: 0.5
+    onComplete:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 0}
+          m_MethodName: OnPointerEnter
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - destination: {x: 1.4, y: -76.5}
+    duration: 0.5
+    onComplete:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 8153316913806220785}
+          m_MethodName: EndTutorialSequence
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+        - m_Target: {fileID: 0}
+          m_MethodName: Reveal
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - destination: {x: 1.4, y: -76.5}
+    duration: 1
+    onComplete:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 0}
+          m_MethodName: Hide
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+--- !u!222 &5354257199465939471
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1660539842250635458}
+  m_CullTransparentMesh: 0
+--- !u!114 &3640444825526929831
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1660539842250635458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 9e7a1ab64947d1a418d54f7d1bbdbfa2, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!114 &8153316913806220785
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14,7 +209,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputSequence: []
   inputLetters: {fileID: 7530376875131077992}
-  cursor: {fileID: 0}
+  inputWord: {fileID: 5136101339388397253}
+  cursor: {fileID: 8046495725754056037}
 --- !u!1001 &4026253421603538983
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -132,6 +328,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7501219877381397794, guid: 23f4797fa15745043b710bde31b4eadf,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 652325818646788380, guid: 23f4797fa15745043b710bde31b4eadf, type: 3}
     - {fileID: 6872886628433487124, guid: 23f4797fa15745043b710bde31b4eadf, type: 3}
@@ -142,9 +343,27 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 4026253421603538983}
   m_PrefabAsset: {fileID: 0}
+--- !u!224 &7530376875469581620 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 6872886628433487123, guid: 23f4797fa15745043b710bde31b4eadf,
+    type: 3}
+  m_PrefabInstance: {fileID: 4026253421603538983}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &7530376875131077992 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6872886628099050831, guid: 23f4797fa15745043b710bde31b4eadf,
     type: 3}
   m_PrefabInstance: {fileID: 4026253421603538983}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &5136101339388397253 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8117519332562833122, guid: 23f4797fa15745043b710bde31b4eadf,
+    type: 3}
+  m_PrefabInstance: {fileID: 4026253421603538983}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22df1ec7341e9a146861adcc5aefe503, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

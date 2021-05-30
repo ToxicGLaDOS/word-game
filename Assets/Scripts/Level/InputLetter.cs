@@ -8,11 +8,18 @@ using UnityEditor;
 public class InputLetter : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
 {
     InputPanel inputPanel;
+    Text text;
     public Image selectedCircle;
+    public char Letter {
+        get{
+            return char.Parse(text.text);
+        }
+    }
     // Start is called before the first frame update
     void Start()
     {
         inputPanel = transform.parent.parent.GetComponent<InputPanel>();
+        text = GetComponentInChildren<Text>(true);
     }
 
     // Update is called once per frame

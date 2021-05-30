@@ -11,6 +11,7 @@ public class InputPanel : MonoBehaviour
     bool inputStarted = false; // Wether we are currently inputting a sequence of letters
     public List<GameObject> inputSequence = new List<GameObject>();
     public Transform inputLetters;
+    public InputWord inputWord;
     UILineRenderer uiLineRenderer;
     LevelView levelView;
 
@@ -24,7 +25,7 @@ public class InputPanel : MonoBehaviour
         get {
             string s = "";
             foreach(GameObject letterObj in inputSequence){
-                s += char.Parse(letterObj.GetComponentInChildren<Text>().text);
+                s += letterObj.GetComponent<InputLetter>().Letter;
             }
             return s;
         }
@@ -72,12 +73,15 @@ public class InputPanel : MonoBehaviour
                 // Prevents the default value of (0,0) from sneaking in for 1 frame
                 // under certain (read unknown) circumstances
                 SetLineRendererMousePoint(GetCursorPosition());
+
+                inputWord.AddLetter(letter.Letter);
             }
         }
     }
 
     virtual protected void SubmitWord(){
         levelView.SubmitWord();
+        inputWord.Clear();
         EndInput();
     }
 
